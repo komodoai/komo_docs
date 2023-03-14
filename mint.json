@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "Komodo AI",
   "logo": {
     "dark": "/logo/dark.png",
     "light": "/logo/light.png"
@@ -23,37 +23,28 @@
   },
   "anchors": [
     {
-      "name": "API Reference",
+      "name": "Komo CLI Reference",
       "icon": "rectangle-terminal",
-      "url": "api-reference"
-    },
-    {
-      "name": "Changelog",
-      "icon": "list",
-      "url": "https://mintlify.com"
-    },
-    {
-      "name": "Community",
-      "icon": "discord",
-      "url": "https://mintlify.com/community"
+      "url": "komo-cli-reference"
     }
   ],
   "navigation": [
     {
       "group": "Home",
-      "pages": ["introduction", "features"]
-    },
-    {
-      "group": "API Documentation",
-      "pages": ["api-reference/authentication"]
-    },
-    {
-      "group": "Endpoint Examples",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/update",
-        "api-reference/endpoint/delete"
+        "introduction"
+      ]
+    },
+    {
+      "group": "Komo CLI Reference",
+      "pages": [
+        "komo-cli-reference/command/get-api-key",
+        "komo-cli-reference/command/init",
+        "komo-cli-reference/command/run",
+        "komo-cli-reference/command/list",
+        "komo-cli-reference/command/logs",
+        "komo-cli-reference/command/shell",
+        "komo-cli-reference/command/machine"
       ]
     }
   ],

@@ -1,0 +1,20 @@
+## logs
+The `logs` command is used to get logs for a Komodo job. This command allows you to specify the job ID and whether to watch the logs or just output the current logs. To retrieve logs for a job with ID abc123 and watch for new log entries, run:
+
+```
+komo logs job123
+```
+This will display the logs for the specified job.
+
+### Usage
+
+```
+komo logs [OPTIONS] JOB_ID
+```
+
+### Options
+The komo logs command supports the following options:
+
+```
+-w, --watch: Whether to watch the logs or just output the current logs. If this option is specified, the command will continuously output new log entries as they appear. If this option is not specified, the command will output the current logs and then exit.
+```

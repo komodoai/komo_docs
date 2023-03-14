@@ -1,0 +1,47 @@
+## run
+The komo run command is used to submit a new job to Komodo AI for processing. This command allows you to specify the backend, resource, and configuration options for the job. By default, the job is run in the foreground, and the command blocks until the job completes.
+
+### Usage
+
+```
+komo run [OPTIONS] [ARGS]...
+```
+
+### Options
+The komo run command supports the following options:
+
+```
+-b, --backend TEXT: The name of the backend to use for the job. This option is required.
+```
+```
+-r, --resource TEXT: The resource type to use for the job as defined in the config file. This option is ignored for local jobs.
+```
+```
+-c, --config TEXT: Override any parameters in your .komo/project.yaml config file. Use . to set nested attributes. For example, to override the config['backends']['k8s']['workspace'] parameter and set it to null, you would do --config backends.k8s.workspace=null. You can override multiple parameters at a time by separating them with commas. For example: --config backends.k8s.workspace=null,backends.k8s.workdir=/app.
+```
+```
+-d, --detach: Run the job in the background and don't block until completion.
+```
+
+### Examples
+Here are some examples of how to use the komo run command:
+
+Submit a job to Komodo using the default settings:
+```
+komo run
+```
+
+Submit a job to Komodo using the "k8s" backend and the "gpu" resource:
+```
+komo run -b k8s -r gpu
+```
+
+Override the default configuration options for the job:
+```
+komo run --config backends.k8s.workspace=null,backends.k8s.workdir=/app
+```
+
+Run the job in the background and don't block until completion:
+```
+komo run -d
+```
