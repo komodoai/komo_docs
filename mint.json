@@ -14,12 +14,12 @@
   "topbarLinks": [
     {
       "name": "Documentation",
-      "url": "https://mintlify.com/docs"
+      "url": "docs"
     }
   ],
   "topbarCtaButton": {
     "name": "Get Started",
-    "url": "https://github.com/mintlify/starter"
+    "url": "getting-started"
   },
   "anchors": [
     {
@@ -32,7 +32,8 @@
     {
       "group": "Home",
       "pages": [
-        "introduction"
+        "introduction",
+        "getting-started"
       ]
     },
     {
@@ -44,7 +45,15 @@
         "komo-cli-reference/command/list",
         "komo-cli-reference/command/logs",
         "komo-cli-reference/command/shell",
-        "komo-cli-reference/command/machine"
+        {
+          "group": "machine",
+          "pages": [
+            "komo-cli-reference/command/machine/start",
+            "komo-cli-reference/command/machine/shell",
+            "komo-cli-reference/command/machine/list",
+            "komo-cli-reference/command/machine/terminate"
+          ]
+        }
       ]
     }
   ],

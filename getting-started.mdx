@@ -1,0 +1,71 @@
+---
+title: "Getting Started"
+description: "Initial steps to get you going."
+---
+
+## Setup global configuration
+
+The first step to getting up and running with Komodo is to set up a global configuration file which stores your Komodo credentials as well as backend details that will power your jobs.
+
+The file is expected at `~/.komo/config.yaml`. Below we provide a sample and go over how to populate it.
+
+```yaml
+komodo_api_key: ABC1234
+backends:
+  local:
+    type: local
+    config: {}
+  k8s:
+    type: kubernetes
+    config:
+      host: https://my-k8s-host.com
+      bearer_token: KLMNO1234
+```
+
+### Komodo API Key
+
+You can obtain your Komodo API Key by providing your login credentials via the `komo get-api-key` command. [Find more details on this command here.](./komo-cli-reference/command/get-api-key)
+
+### Backends
+
+You can configure varius backend under the `backends` key which contains a dictionary, mapping backend name to the backend config.
+
+Each backend specification must include a type and a config.
+
+#### Supported Backend Types
+
+* Local
+* Kubernetes
+
+
+### Supported Backend Configurations
+
+#### Local
+
+The Local backend requires no further configuration, the sample can be copied as it. However, please make sure you have Docker installed and running.
+
+#### Kubernetes
+
+The Kubernetes backend requires two configuration fields:
+
+* `host` - this is address of your Kubernetes cluster API.
+
+The value for `host` can be obtained in the following way
+
+```bash
+➜  ~ kubectl config view | grep "server" | sed 's/.*\/\/\(.*\):.*/https:\/\/\1/'
+
+https://my-k8s-host.com
+```
+
+* `bearer_token` - this is the token used to authenticate with your Kubernetes cluster.
+The value for the `bearer` token host can be obtained using the following commands
+
+```bash
+CLUSTER_NAME=$(kubectl config view | grep -m 1 "name" | awk '{ print $2 }')
+echo "$CLUSTER_NAME"
+APISERVER=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$CLUSTER_NAME\")].cluster.server}")
+echo "$APISERVER"
+TOKEN=$(kubectl get secrets -o jsonpath="{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='default')].data.token}"|base64 -d)
+echo "$TOKEN"
+```
