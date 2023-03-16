@@ -1,0 +1,28 @@
+---
+title: start
+---
+
+### machine start
+The `machine start` command is used to start a Komodo machine. This command takes a `NAME` argument to identify the new machine, and supports several options to customize its configuration.
+
+#### Usage
+```
+komo machine start [OPTIONS] NAME
+```
+
+#### Options
+```
+The -b/--backend option specifies the name of the backend to use for the new machine. If not provided, the default backend will be used.
+```
+
+```
+The -r/--resource option specifies the type of resource to use for the job as defined in the project's configuration file. This option is ignored for local jobs.
+```
+
+```
+The -c/--config option allows you to override any parameters in your .komo/project.yaml configuration file. You can use the '.' character to set nested attributes, and separate multiple parameters with commas. For example, to override the config['backends']['k8s']['workspace'] parameter and set it to null, you would use --config backends.k8s.workspace=null.
+```
+
+```
+The -d/--detach option starts the machine in detached mode, which allows you to continue using the terminal while the machine is running in the background.
+```
