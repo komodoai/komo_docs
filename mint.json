@@ -21,6 +21,18 @@
     "name": "Get Started",
     "url": "getting-started"
   },
+  "anchors": [
+    {
+      "name": "Getting Started",
+      "icon": "rectangle-terminal",
+      "url": "getting-started"
+    },
+    {
+      "name": "Komo CLI Reference",
+      "icon": "rectangle-terminal",
+      "url": "komo-cli-reference"
+    }
+  ],
   "navigation": [
     {
       "group": "Home",
