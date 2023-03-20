@@ -13,21 +13,14 @@
   },
   "topbarLinks": [
     {
-      "name": "Documentation",
-      "url": "docs"
+      "name": "Home",
+      "url": "introduction"
     }
   ],
   "topbarCtaButton": {
     "name": "Get Started",
     "url": "getting-started"
   },
-  "anchors": [
-    {
-      "name": "Komo CLI Reference",
-      "icon": "rectangle-terminal",
-      "url": "komo-cli-reference"
-    }
-  ],
   "navigation": [
     {
       "group": "Home",

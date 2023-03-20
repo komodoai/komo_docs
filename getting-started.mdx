@@ -5,6 +5,14 @@ description: "Initial steps to get you going."
 
 Komodo AI can run your jobs on various backends. The choice of backend is yours -  we strive to provide the same seamless experience regardless of your choice.
 
+## Install Komodo CLI
+
+Install Komodo CLI from PyPI. If you're not able to use PyPI to install your packages, let us know and we will be happy to provide you with a Python Wheel file.
+
+```bash
+pip install komodo-cli
+```
+
 ## Choose and configure backend
 
 **Supported Backends**
@@ -119,3 +127,13 @@ APISERVER=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$CLUSTER_NAM
 TOKEN=$(kubectl get secrets -o jsonpath="{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='default')].data.token}"|base64 -d)
 echo "$TOKEN"
 ```
+
+## Initialize a Komodo Project
+
+Before you can run Komodo jobs, you need to initialize a new Komodo project in your repository. Run `komo init` wherever you'd like to do that. This will create a `.komo` directory with a template project configuration in the `project.yaml` file. Edit this file to fit your needs.
+
+You can find more information on `komo init` and the project configuration file [here](./komo-cli-reference/command/init).
+
+## Run Your First Komodo Job
+
+TODO: Should maybe do this on the demo repository?
