@@ -3,11 +3,69 @@ title: "Getting Started"
 description: "Initial steps to get you going."
 ---
 
-## Setup global configuration
+Komodo AI can run your jobs on various backends. The choice of backend is yours -  we strive to provide the same seamless experience regardless of your choice.
 
-The first step to getting up and running with Komodo is to set up a global configuration file which stores your Komodo credentials as well as backend details that will power your jobs.
+## Choose and configure backend
 
-The file is expected at `~/.komo/config.yaml`. Below we provide a sample and go over how to populate it.
+**Supported Backends**
+* Local
+* Kubernetes
+
+If you want us to support a new backend, let us know by opening a GitHub issue.
+
+### Configuration
+
+#### Local
+
+The Local backend requires no configuration, the sample below can be used as is. However, please make sure you have Docker [installed](https://docs.docker.com/engine/install/) and running.
+
+#### Kubernetes
+
+A few steps are required to prepare your Kubernetes cluster for use with Komodo.
+
+<Tip>
+If you need help with the steps below, reach out to someone on the Platform team in your organization or let us know and we'll be happy to work with you to get this set up!
+</Tip>
+
+<Accordion title="Install Volcano" icon="volcano">
+Komodo uses [Volcano](https://volcano.sh/en/) to schedule workloads on your Kubernetes cluster.
+
+Install Volcano by running the below command against your cluster.
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/volcano-sh/volcano/release-1.6/installer/volcano-development.yaml
+```
+</Accordion>
+
+<Accordion title="Create Komodo Resources" icon="dragon">
+Komodo uses isolated resources to schedule workloads on your cluster. In this section we will configure these resources.
+
+**Create Komodo Cluster Role**
+```bash
+kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli_docs/main/files/cluster-role.yaml
+```
+
+**Create Komodo Service Account**
+```bash
+kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli_docs/main/files/service-account.yaml
+```
+
+**Link the Komodo Service Account to the Komodo Cluster Role**
+```bash
+kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli_docs/main/files/cluster-role-binding.yaml
+```
+
+**Create a Komodo Service Account Token**
+```bash
+kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli_docs/main/files/service-account-token.yaml
+```
+</Accordion>
+
+## Setup Your Machine for Komodo
+
+Now that you've chosen and configured your backend(s), you're ready to configure your machine with with a global Komodo configuration file. This file stores your Komodo credentials as well as information on the backends that will run your jobs.
+
+The global configuration file is expected at `~/.komo/config.yaml`. Below we provide a sample and go over how to populate it.
 
 ```yaml
 komodo_api_key: ABC1234
@@ -24,48 +82,40 @@ backends:
 
 ### Komodo API Key
 
-You can obtain your Komodo API Key by providing your login credentials via the `komo get-api-key` command. [Find more details on this command here.](./komo-cli-reference/command/get-api-key)
+The Komodo API key is used to authenticate to the Komodo API. Obtain an API key by providing your login credentials via the `komo get-api-key` command and its value to the `komodo_api_key` field in the configuration file. [Find more details on this command here.](./komo-cli-reference/command/get-api-key)
 
 ### Backends
 
 You can configure various backend under the `backends` key which contains a dictionary, mapping backend name to the backend config.
 
-Each backend specification must include a type and a config.
-
-#### Supported Backend Types
-
-* Local
-* Kubernetes
-
-
-### Supported Backend Configurations
+Each backend specification must include a type and a backend-specific config.
 
 #### Local
 
-The Local backend requires no further configuration, the sample can be copied as it. However, please make sure you have Docker installed and running.
+The Local backend requires no configuration, the sample above can be used as is. However, please make sure you have Docker [installed](https://docs.docker.com/engine/install/) and running.
 
 #### Kubernetes
 
-The Kubernetes backend requires two configuration fields:
+Once you're done [configuring your Kubernetes cluster for use with Komodo](/getting-started#kubernetes), you'll need to obtain the URL of your Kubernetes cluster API server and a token to communicate with the cluster.
 
-* `host` - this is address of your Kubernetes cluster API.
+<Note>This token belongs to the Service Account we created in the Kubernetes cluster configuration step.</Note>
+
+##### **host**
 
 The value for `host` can be obtained in the following way
 
 ```bash
-➜  ~ kubectl config view | grep "server" | sed 's/.*\/\/\(.*\):.*/https:\/\/\1/'
-
-https://my-k8s-host.com
+kubectl config view | grep "server" | sed 's/.*\/\/\(.*\):.*/https:\/\/\1/'
 ```
 
-* `bearer_token` - this is the token used to authenticate with your Kubernetes cluster.
-The value for the `bearer` token host can be obtained using the following commands
+##### **bearer_token**
+The value for the `bearer_token` can be obtained using the following commands. 
 
 ```bash
 CLUSTER_NAME=$(kubectl config view | grep -m 1 "name" | awk '{ print $2 }')
-echo "$CLUSTER_NAME"
+echo "Obtaining the Service Account token for cluster $CLUSTER_NAME"
+echo ""
 APISERVER=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$CLUSTER_NAME\")].cluster.server}")
-echo "$APISERVER"
 TOKEN=$(kubectl get secrets -o jsonpath="{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='default')].data.token}"|base64 -d)
 echo "$TOKEN"
 ```
