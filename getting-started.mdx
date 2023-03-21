@@ -117,14 +117,22 @@ kubectl config view | grep "server" | sed 's/.*\/\/\(.*\):.*/https:\/\/\1/'
 ```
 
 ##### **bearer_token**
-The value for the `bearer_token` can be obtained using the following commands. 
+The value for the `bearer_token` can be obtained using the following steps.
+
+First set the `CLUSTER_NAME` environment variable to the name of your cluster.
+```bash
+export CLUSTER_NAME="my-cluster-name"
+```
+
+<Accordion title="How to get cluster name?">
+Try `kubectl config view | grep -m 1 "name" | awk '{ print $2 }'` command or ask your platform engineer.
+</Accordion>
 
 ```bash
-CLUSTER_NAME=$(kubectl config view | grep -m 1 "name" | awk '{ print $2 }')
 echo "Obtaining the Service Account token for cluster $CLUSTER_NAME"
 echo ""
 APISERVER=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$CLUSTER_NAME\")].cluster.server}")
-TOKEN=$(kubectl get secrets -o jsonpath="{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='default')].data.token}"|base64 -d)
+TOKEN=$(kubectl get secret komodo-runner-secret -o jsonpath='{.data.token}' | base64 -d)
 echo "$TOKEN"
 ```
 
