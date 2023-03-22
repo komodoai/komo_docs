@@ -40,9 +40,20 @@ Komodo uses [Volcano](https://volcano.sh/en/) to schedule workloads on your Kube
 
 Install Volcano by running the below command against your cluster.
 
-```bash
-kubectl apply -f https://raw.githubusercontent.com/volcano-sh/volcano/release-1.6/installer/volcano-development.yaml
-```
+<Tabs>
+  <Tab title="GCP">
+    ```bash
+    kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli_docs/main/files/volcano-development-no-priorityclasses.yaml
+    ```
+  </Tab>
+  <Tab title="Other">
+    ```bash
+    kubectl apply -f https://raw.githubusercontent.com/volcano-sh/volcano/release-1.6/installer/volcano-development.yaml
+    ```
+  </Tab>
+</Tabs>
+
+
 </Accordion>
 
 <Accordion title="Create Komodo Resources" icon="dragon">
