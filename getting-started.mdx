@@ -142,7 +142,7 @@ Try `kubectl config view | grep -m 1 "name" | awk '{ print $2 }'` command or ask
 ```bash
 echo "Obtaining the Service Account token for cluster $CLUSTER_NAME"
 echo ""
-TOKEN=$(kubectl get secret komodo-runner-secret -o jsonpath='{.data.token}' | base64 -d)
+TOKEN=$(kubectl get secret komodo-runner-secret --namespace default -o jsonpath='{.data.token}' | base64 -d)
 echo "$TOKEN"
 ```
 
