@@ -129,7 +129,7 @@ export CLUSTER_NAME="my-cluster-name"
 The value for `host` can be obtained in the following way
 
 ```bash
-kubectl k cluster-info $CLUSTER_NAME | grep "control plane" | awk '{ print $NF }'
+kubectl cluster-info $CLUSTER_NAME | grep "control plane" | awk '{ print $NF }'
 ```
 
 ##### **bearer_token**
