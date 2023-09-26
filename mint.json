@@ -51,12 +51,13 @@
         "komo-cli-reference/command/logs",
         "komo-cli-reference/command/shell",
         {
-          "group": "machine",
+          "group": "backend",
           "pages": [
-            "komo-cli-reference/command/machine/start",
-            "komo-cli-reference/command/machine/shell",
-            "komo-cli-reference/command/machine/list",
-            "komo-cli-reference/command/machine/terminate"
+            "komo-cli-reference/command/backend/create",
+            "komo-cli-reference/command/backend/list",
+            "komo-cli-reference/command/backend/delete",
+            "komo-cli-reference/command/backend/add-resource",
+            "komo-cli-reference/command/backend/remove-resource"
           ]
         },
         {
@@ -67,6 +68,15 @@
             "komo-cli-reference/command/compute/terminate",
             "komo-cli-reference/command/compute/add-storage",
             "komo-cli-reference/command/compute/remove-storage"
+          ]
+        },
+        {
+          "group": "machine",
+          "pages": [
+            "komo-cli-reference/command/machine/start",
+            "komo-cli-reference/command/machine/shell",
+            "komo-cli-reference/command/machine/list",
+            "komo-cli-reference/command/machine/terminate"
           ]
         }
       ]
