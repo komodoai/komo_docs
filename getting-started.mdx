@@ -3,7 +3,7 @@ title: "Getting Started"
 description: "Initial steps to get you going."
 ---
 
-Komodo AI can run your jobs on various backends. The choice of backend is yours -  we strive to provide the same seamless experience regardless of your choice.
+Komodo AI can run your jobs on various backends. The choice of backend is yours - we strive to provide the same seamless experience regardless of your choice.
 
 ## Install Komodo CLI
 
@@ -16,8 +16,9 @@ pip install komodo-cli
 ## Choose and configure backend
 
 **Supported Backends**
-* Local
-* Kubernetes
+
+- Local
+- Kubernetes
 
 If you want us to support a new backend, let us know by opening a GitHub issue.
 
@@ -29,30 +30,18 @@ The Local backend requires no configuration, the sample below can be used as is.
 
 #### Kubernetes
 
-A few steps are required to prepare your Kubernetes cluster for use with Komodo.
+A few steps are required to prepare your Kubernetes cluster for use with Komodo if the cluster was not created using `komo compute create`.
 
 <Tip>
-If you need help with the steps below, reach out to someone on the Platform team in your organization or let us know and we'll be happy to work with you to get this set up!
+  If you need help with the steps below, reach out to someone on the Platform
+  team in your organization or let us know and we'll be happy to work with you
+  to get this set up!
 </Tip>
 
 <Accordion title="Install Volcano" icon="volcano">
 Komodo uses [Volcano](https://volcano.sh/en/) to schedule workloads on your Kubernetes cluster.
 
-Install Volcano by running the below command against your cluster.
-
-<Tabs>
-  <Tab title="GCP">
-    ```bash
-    kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli_docs/main/files/volcano-development-no-priorityclasses.yaml
-    ```
-  </Tab>
-  <Tab title="Other">
-    ```bash
-    kubectl apply -f https://raw.githubusercontent.com/volcano-sh/volcano/release-1.6/installer/volcano-development.yaml
-    ```
-  </Tab>
-</Tabs>
-
+Install Volcano by following the appropriate instructions in the [Volcano README](https://github.com/volcano-sh/volcano#readme).
 
 </Accordion>
 
@@ -60,24 +49,29 @@ Install Volcano by running the below command against your cluster.
 Komodo uses isolated resources to schedule workloads on your cluster. In this section we will configure these resources.
 
 **Create Komodo Cluster Role**
+
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli_docs/main/files/cluster-role.yaml
+kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/cluster-role.yaml
 ```
 
 **Create Komodo Service Account**
+
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli_docs/main/files/service-account.yaml
+kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/service-account.yaml
 ```
 
 **Link the Komodo Service Account to the Komodo Cluster Role**
+
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli_docs/main/files/cluster-role-binding.yaml
+kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/cluster-role-binding.yaml
 ```
 
 **Create a Komodo Service Account Token**
+
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli_docs/main/files/service-account-token.yaml
+kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/service-account-token.yaml
 ```
+
 </Accordion>
 
 ## Setup Your Machine for Komodo
@@ -117,9 +111,13 @@ The Local backend requires no configuration, the sample above can be used as is.
 
 Once you're done [configuring your Kubernetes cluster for use with Komodo](/getting-started#kubernetes), you'll need to obtain the URL of your Kubernetes cluster API server and a token to communicate with the cluster.
 
-<Note>This token belongs to the Service Account we created in the Kubernetes cluster configuration step.</Note>
+<Note>
+  This token belongs to the Service Account we created in the Kubernetes cluster
+  configuration step.
+</Note>
 
 First set the `CLUSTER_NAME` environment variable to the name of your cluster.
+
 ```bash
 export CLUSTER_NAME="my-cluster-name"
 ```
@@ -133,6 +131,7 @@ kubectl cluster-info $CLUSTER_NAME | grep "control plane" | awk '{ print $NF }'
 ```
 
 ##### **bearer_token**
+
 The value for the `bearer_token` can be obtained using the following steps.
 
 <Accordion title="How to get cluster name?">
