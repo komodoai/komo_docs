@@ -58,6 +58,16 @@
             "komo-cli-reference/command/machine/list",
             "komo-cli-reference/command/machine/terminate"
           ]
+        },
+        {
+          "group": "compute",
+          "pages": [
+            "komo-cli-reference/command/compute/create",
+            "komo-cli-reference/command/compute/list",
+            "komo-cli-reference/command/compute/terminate",
+            "komo-cli-reference/command/compute/add-storage",
+            "komo-cli-reference/command/compute/remove-storage"
+          ]
         }
       ]
     }
