@@ -24,7 +24,7 @@
   "anchors": [
     {
       "name": "Getting Started",
-      "icon": "rectangle-terminal",
+      "icon": "circle-play",
       "url": "getting-started"
     },
     {
@@ -38,7 +38,8 @@
       "group": "Home",
       "pages": [
         "introduction",
-        "getting-started"
+        "getting-started",
+        "komo-cli-reference"
       ]
     },
     {

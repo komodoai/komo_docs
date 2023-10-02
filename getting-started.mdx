@@ -5,152 +5,121 @@ description: "Initial steps to get you going."
 
 Komodo AI can run your jobs on various backends. The choice of backend is yours - we strive to provide the same seamless experience regardless of your choice.
 
-## Install Komodo CLI
 
-Install Komodo CLI from PyPI. If you're not able to use PyPI to install your packages, let us know and we will be happy to provide you with a Python Wheel file.
+<Steps>
+  <Step title="Install Komodo CLI">
+    Install Komodo CLI from PyPI. If you're not able to use PyPI to install your packages, let us know and we will be happy to provide you with a Python Wheel file.
+    ```bash
+    pip install komodo-cli
+    ```
+  </Step>
+  <Step title="Choose and configure compute backend">
+    Follow the backend specific instructions
+    <Accordion title="Local">
+        The Local backend requires no configuration, the sample below can be used as is. However, please make sure you have Docker [installed](https://docs.docker.com/engine/install/) and running.
+    </Accordion>
+    <Accordion title="Kubernetes">
+        You can create a Komodo-compatible Kubernetes cluster using `komo compute create` [command](./komo-cli-reference/command/compute/create)
 
-```bash
-pip install komodo-cli
-```
+        If you'd rather bring over an existing Kubernetes cluster, follow the steps below to prepare it for use with Komodo.
 
-## Choose and configure backend
+        <Tip>
+            If you need help with the steps below, reach out to someone on the Platform
+            team in your organization or let us know and we'll be happy to work with you
+            to get this set up!
+        </Tip>
 
-**Supported Backends**
+        <Accordion title="Install Volcano" icon="volcano">
+            Komodo uses [Volcano](https://volcano.sh/en/) to schedule workloads on your Kubernetes cluster.
 
-- Local
-- Kubernetes
+            Install Volcano by following the appropriate instructions in the [Volcano README](https://github.com/volcano-sh/volcano#readme).
+        </Accordion>
 
-If you want us to support a new backend, let us know by opening a GitHub issue.
+        <Accordion title="Create Komodo Resources" icon="dragon">
+            Komodo uses isolated resources to schedule workloads on your cluster. In this section we will configure these resources.
 
-### Configuration
+            **Create Komodo Cluster Role**
 
-#### Local
+            ```bash
+            kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/cluster-role.yaml
+            ```
 
-The Local backend requires no configuration, the sample below can be used as is. However, please make sure you have Docker [installed](https://docs.docker.com/engine/install/) and running.
+            **Create Komodo Service Account**
 
-#### Kubernetes
+            ```bash
+            kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/service-account.yaml
+            ```
 
-A few steps are required to prepare your Kubernetes cluster for use with Komodo if the cluster was not created using `komo compute create`.
+            **Link the Komodo Service Account to the Komodo Cluster Role**
 
-<Tip>
-  If you need help with the steps below, reach out to someone on the Platform
-  team in your organization or let us know and we'll be happy to work with you
-  to get this set up!
-</Tip>
+            ```bash
+            kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/cluster-role-binding.yaml
+            ```
 
-<Accordion title="Install Volcano" icon="volcano">
-Komodo uses [Volcano](https://volcano.sh/en/) to schedule workloads on your Kubernetes cluster.
+            **Create a Komodo Service Account Token**
 
-Install Volcano by following the appropriate instructions in the [Volcano README](https://github.com/volcano-sh/volcano#readme).
+            ```bash
+            kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/service-account-token.yaml
+            ```
+        </Accordion>
+        <Accordion title="Obtain and store cluster details" icon="gear">
+            Once you're done [configuring your Kubernetes cluster for use with Komodo](/getting-started#kubernetes), you'll need to obtain the URL of your Kubernetes cluster API server and a token to communicate with the cluster.
 
-</Accordion>
+            <Note>
+            This token belongs to the Service Account we created in the Kubernetes cluster
+            configuration step.
+            </Note>
 
-<Accordion title="Create Komodo Resources" icon="dragon">
-Komodo uses isolated resources to schedule workloads on your cluster. In this section we will configure these resources.
+            First set the `CLUSTER_NAME` environment variable to the name of your cluster.
 
-**Create Komodo Cluster Role**
+            ```bash
+            export CLUSTER_NAME="my-cluster-name"
+            ```
 
-```bash
-kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/cluster-role.yaml
-```
+            ##### **host**
 
-**Create Komodo Service Account**
+            The value for `host` can be obtained in the following way
 
-```bash
-kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/service-account.yaml
-```
+            ```bash
+            kubectl cluster-info $CLUSTER_NAME | grep "control plane" | awk '{ print $NF }'
+            ```
 
-**Link the Komodo Service Account to the Komodo Cluster Role**
+            ##### **bearer_token**
 
-```bash
-kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/cluster-role-binding.yaml
-```
+            The value for the `bearer_token` can be obtained using the following steps.
 
-**Create a Komodo Service Account Token**
+            <Accordion title="How to get cluster name?">
+            Try `kubectl config view | grep -m 1 "name" | awk '{ print $2 }'` command or ask your platform engineer.
+            </Accordion>
 
-```bash
-kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/service-account-token.yaml
-```
+            ```bash
+            echo "Obtaining the Service Account token for cluster $CLUSTER_NAME"
+            echo ""
+            TOKEN=$(kubectl get secret komodo-runner-secret --namespace default -o jsonpath='{.data.token}' | base64 -d)
+            echo "$TOKEN"
+            ```
+        </Accordion>
+    </Accordion>
+    <Accordion title="AWS Batch">
+        TODO / No extra setup?
+    </Accordion>
+  </Step>
+  <Step title="Create the Komodo API key">
+    The Komodo API key is used to authenticate to the Komodo API. Create an API key by providing your login credentials via the `komo api-key create` command and paste it into the file `~/.komo/api-key` file. [Find more details on this command here.](./komo-cli-reference/command/get-api-key)
+  </Step>
+  <Step title="Create compute backends and resources">
+    Run `komo backend create --type <backend-type>` and follow the backend-specific instructions to initialize the backend with Komodo. [Find more details on this command here.](./komo-cli-reference/command/backend/create)
 
-</Accordion>
+    Run `komo backend add-resource --backend-name <backend-name> --resource-name <resource-name>` to add resources to the backend above. [Find more details on this command here.](./komo-cli-reference/command/backend/add-resource)
 
-## Setup Your Machine for Komodo
+    You will reference the backends and resources when launching jobs.
+  </Step>
+  <Step title="Initialize a Komodo project in your repository">
+    Initialize a new Komodo project in your repository to run jobs out of it. Run `komo init` wherever you'd like to do that. This will create a `.komo` directory with a template project configuration in the `project.yaml` file for each backend. Edit this file to fit your needs (Required and recommended fields to edit are marked with `TODO:`).
 
-Now that you've chosen and configured your backend(s), you're ready to configure your machine with with a global Komodo configuration file. This file stores your Komodo credentials as well as information on the backends that will run your jobs.
-
-The global configuration file is expected at `~/.komo/config.yaml`. Below we provide a sample and go over how to populate it.
-
-```yaml
-komodo_api_key: ABC1234
-backends:
-  local:
-    type: local
-    config: {}
-  k8s:
-    type: kubernetes
-    config:
-      host: https://my-k8s-host.com
-      bearer_token: KLMNO1234
-```
-
-### Komodo API Key
-
-The Komodo API key is used to authenticate to the Komodo API. Obtain an API key by providing your login credentials via the `komo get-api-key` command and its value to the `komodo_api_key` field in the configuration file. [Find more details on this command here.](./komo-cli-reference/command/get-api-key)
-
-### Backends
-
-You can configure various backend under the `backends` key which contains a dictionary, mapping backend name to the backend config.
-
-Each backend specification must include a type and a backend-specific config.
-
-#### Local
-
-The Local backend requires no configuration, the sample above can be used as is. However, please make sure you have Docker [installed](https://docs.docker.com/engine/install/) and running.
-
-#### Kubernetes
-
-Once you're done [configuring your Kubernetes cluster for use with Komodo](/getting-started#kubernetes), you'll need to obtain the URL of your Kubernetes cluster API server and a token to communicate with the cluster.
-
-<Note>
-  This token belongs to the Service Account we created in the Kubernetes cluster
-  configuration step.
-</Note>
-
-First set the `CLUSTER_NAME` environment variable to the name of your cluster.
-
-```bash
-export CLUSTER_NAME="my-cluster-name"
-```
-
-##### **host**
-
-The value for `host` can be obtained in the following way
-
-```bash
-kubectl cluster-info $CLUSTER_NAME | grep "control plane" | awk '{ print $NF }'
-```
-
-##### **bearer_token**
-
-The value for the `bearer_token` can be obtained using the following steps.
-
-<Accordion title="How to get cluster name?">
-Try `kubectl config view | grep -m 1 "name" | awk '{ print $2 }'` command or ask your platform engineer.
-</Accordion>
-
-```bash
-echo "Obtaining the Service Account token for cluster $CLUSTER_NAME"
-echo ""
-TOKEN=$(kubectl get secret komodo-runner-secret --namespace default -o jsonpath='{.data.token}' | base64 -d)
-echo "$TOKEN"
-```
-
-## Initialize a Komodo Project
-
-Before you can run Komodo jobs, you need to initialize a new Komodo project in your repository. Run `komo init` wherever you'd like to do that. This will create a `.komo` directory with a template project configuration in the `project.yaml` file. Edit this file to fit your needs.
-
-You can find more information on `komo init` and the project configuration file [here](./komo-cli-reference/command/init).
-
-## Run Your First Komodo Job
-
-TODO: Should maybe do this on the demo repository?
+    You can find more information on `komo init` and the project configuration file [here](./komo-cli-reference/command/init).
+  </Step>
+  <Step title="Run Your First Komodo Job">
+    You are now ready to run your first job! Use the `komo run <options> -- <command>` command to do so. [Find full details on this command here.](./komo-cli-reference/command/run)
+  </Step>
+</Steps>
