@@ -5,7 +5,7 @@
     "dark": "/logo/dark.png",
     "light": "/logo/light.png"
   },
-  "favicon": "/favicon.png",
+  "favicon": "/logo192.png",
   "colors": {
     "primary": "#0069ED",
     "light": "#4D9CFF",
@@ -21,36 +21,31 @@
     "name": "Get Started",
     "url": "getting-started"
   },
-  "anchors": [
-    {
-      "name": "Getting Started",
-      "icon": "circle-play",
-      "url": "getting-started"
-    },
-    {
-      "name": "Komo CLI Reference",
-      "icon": "rectangle-terminal",
-      "url": "komo-cli-reference"
-    }
-  ],
+  "anchors": [],
   "navigation": [
     {
       "group": "Home",
       "pages": [
         "introduction",
-        "getting-started",
-        "komo-cli-reference"
+        "getting-started"
       ]
     },
     {
       "group": "Komo CLI Reference",
       "pages": [
-        "komo-cli-reference/command/get-api-key",
         "komo-cli-reference/command/init",
         "komo-cli-reference/command/run",
         "komo-cli-reference/command/list",
         "komo-cli-reference/command/logs",
         "komo-cli-reference/command/shell",
+        {
+          "group": "api-key",
+          "pages": [
+            "komo-cli-reference/command/api-key/create",
+            "komo-cli-reference/command/api-key/list",
+            "komo-cli-reference/command/api-key/delete"
+          ]
+        },
         {
           "group": "backend",
           "pages": [
@@ -58,7 +53,7 @@
             "komo-cli-reference/command/backend/list",
             "komo-cli-reference/command/backend/delete",
             "komo-cli-reference/command/backend/add-resource",
-            "komo-cli-reference/command/backend/remove-resource"
+            "komo-cli-reference/command/backend/delete-resource"
           ]
         },
         {
@@ -84,8 +79,6 @@
     }
   ],
   "footerSocials": {
-    "twitter": "https://twitter.com/mintlify",
-    "github": "https://github.com/mintlify",
-    "linkedin": "https://www.linkedin.com/company/mintsearch"
+    "github": "https://github.com/komodoai"
   }
 }
