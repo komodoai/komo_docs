@@ -33,7 +33,6 @@
     {
       "group": "Komo CLI Reference",
       "pages": [
-        "komo-cli-reference/command/init",
         "komo-cli-reference/command/run",
         "komo-cli-reference/command/list",
         "komo-cli-reference/command/logs",
@@ -44,6 +43,13 @@
             "komo-cli-reference/command/api-key/create",
             "komo-cli-reference/command/api-key/list",
             "komo-cli-reference/command/api-key/delete"
+          ]
+        },
+        {
+          "group": "init",
+          "pages": [
+            "komo-cli-reference/command/init/project",
+            "komo-cli-reference/command/init/task"
           ]
         },
         {

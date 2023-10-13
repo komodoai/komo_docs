@@ -7,7 +7,7 @@
 # This repository is where the images will be uploaded. Please make sure that your
 # backend is set up with the correct permissions to download images from this repository.
 # TODO: Create a docker repo and update this field accordingly
-overlay_images_repository: kmushegi/puma-overlays
+overlay_images_repository: my-docker-repo
 backends:
 
   local:
@@ -27,8 +27,9 @@ backends:
       # Mount in the current directory into /app
       - source: .
         target: /app
+        type: bind
 
-  k8s:
+  my-kubernetes-backend:
     # TODO: set this to the docker image that you want to use locally
     base_image: "python:3.9"
     # TODO: set this to the directory inside your image where your command will run
@@ -38,7 +39,7 @@ backends:
     # This means that every time you run a job, all of the files you have in your project directory
     # (doesn't matter if they're committed with git or not) will be copied into your docker image
     # before starting the job.
-    workspace: null
+    workspace: .
     # TODO: You can set any number of environment variables here.
     env:
       test_var: "test_value"
@@ -50,35 +51,12 @@ backends:
       # Mount in /my-shared-directory (which exists on the node in kubernetes) into /data inside the container
       # - source: /my-shared-directory
       #   target: /data
-    # These specify the types of resources you'd want to use to run your jobs.
-    # Different types of jobs might use different resources. For example, you might need 4 gpus
-    # for a training job, but only 1 gpu for an evaluation job.
-    # Here is where you can specify these different types of resources.
-    # This resources section is a mapping from <resource name> (which is defined by you, the user) to
-    # the set of resources needed to be specified for the backend. For Kubernetes, you need to specify
-    # the number of gpus, cpus, and memory (in MB).
-    # Below, you can see there are 3 resources already defined for you. One is named 'gpu1', and requires
-    # 1 gpu, 8 cpus, and 8gb of memory.
-    # The name that you provide for each resource is the same name you will use for the --resource flag in
-    # the CLI.
-    # TODO: Update these to specify the resources you need for your project.
-    resources:
-      gpu1: # change this name to whatever you want
-        gpus: 1
-        cpus: 8
-        memMB: 8000
-      gpu4: # change this name to whatever you want
-        gpus: 4
-        cpus: 32
-        memMB: 64000
-      cpu1: # change this name to whatever you want
-        gpus: 0
-        cpus: 1
-        memMB: 100
+      #   type: bind
+
     # This is the default resource that will be used for this backend if no resource is specified
-    default_resource: cpu1
+    default_resource: my-resource
 
 # The default backend to use if the --backend flag isn't specified
 # TODO: Change this to whichever backend you choose
-default_backend: "k8s"
+default_backend: "my-kubernetes-backend"
 ```
