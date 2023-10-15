@@ -26,6 +26,7 @@ komo run echo "Hello World"
 
 Run a python training job on your `aws` backend using resource `gpu-large`. We use `--` to separate
 the arguments to the CLI from the arguments to your script.
+
 <Note>This assumes you have created a backend named `aws` and a resource named `gpu-large` for that backend</Note>
 ```bash
 komo run -b aws -r gpu-large -- python train.py --epochs 100
