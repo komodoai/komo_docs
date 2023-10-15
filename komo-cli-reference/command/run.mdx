@@ -31,10 +31,10 @@ the arguments to the CLI from the arguments to your script.
 komo run -b aws -r gpu-large -- python train.py --epochs 100
 ```
 
-Run the same job, this time overriding the `workdir` specified in your
+Run the same job, this time overriding both the `workdir` and `image` specified in your
 project config for backend `aws`
 ```bash
-komo run -b aws -r gpu-large -c workdir=/app -- python train.py --epochs 100
+komo run -b aws -r gpu-large -c workdir=/app,image="pytorch/pytorch" -- python train.py --epochs 100
 ```
 
 Run a job and exit as soon as the job has started
