@@ -24,19 +24,20 @@ Run a simple hello world job, using your default backend and resource
 komo run echo "Hello World"
 ```
 
-Run the same job on your `aws` backend using resource `g4`
-<Note>This assumes you have created a backend named `aws` and a resource named `g4` for that backend</Note>
+Run a python training job on your `aws` backend using resource `gpu-large`. We use `--` to separate
+the arguments to the CLI from the arguments to your script.
+<Note>This assumes you have created a backend named `aws` and a resource named `gpu-large` for that backend</Note>
 ```bash
-komo run -b aws -r g4 echo "Hello World"
+komo run -b aws -r gpu-large -- python train.py --epochs 100
 ```
 
 Run the same job, this time overriding the `workdir` specified in your
 project config for backend `aws`
 ```bash
-komo run -b aws -r g4 -c workdir=/app
+komo run -b aws -r gpu-large -c workdir=/app -- python train.py --epochs 100
 ```
 
 Run a job and exit as soon as the job has started
 ```bash
-komo run -d echo "Hello World"
+komo run -d -- python train.py --epochs 100
 ```
