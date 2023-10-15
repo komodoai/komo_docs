@@ -2,20 +2,22 @@
 title: delete
 ---
 
-### backend delete
-
-The `backend delete` command is used to delete a backend entity.
+Delete a backend.
 
 ### Usage
 
-```
-komo backend delete [OPTIONS] NAME
-```
+`komo backend delete [OPTIONS]`
 
 ### Options
 
-```
-Options:
-  -f, --force:  Delete the backend even if there are jobs/machines that are still running or unreacheable (those will be deleted, but not
-cancelled)
+| Option                              	    | Description                                        | Type 	|
+|-----------------------------------------  |--------------------------------------------------- |------	|
+| &#x2011;b, &#x2011;&#x2011;backend 	      | The name of the backend to delete. Required.       | Text 	|
+| &#x2011;f, &#x2011;&#x2011;force      	  | Delete the backend even if there are jobs/machines that are still running or unreacheable (those will be deleted, but not cancelled).        | |
+
+### Examples
+
+Delete the backend named `aws`
+```bash
+komo backend delete -b aws
 ```

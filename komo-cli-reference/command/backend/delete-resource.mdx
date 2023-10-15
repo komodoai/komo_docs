@@ -2,17 +2,22 @@
 title: delete-resource
 ---
 
-### backend delete-resource
-
-The `backend delete-resource` command is used to delete a resource on an existing backend.
+Delete a resource for an existing backend.
 
 ### Usage
 
-````
-komo backend delete-resource [OPTIONS] BACKEND_NAME RESOURCE_NAME
-```
+`komo backend delete-resource [OPTIONS]`
 
 ### Options
 
-None.
-````
+| Option                              	| Description                                                                                                                                                       	| Type 	|
+|-------------------------------------	|----------------------------------------------------------- |------	|
+| &#x2011;b, &#x2011;&#x2011;backend  	| Name of the backend to delete the resource from. Required. | Text 	|
+| &#x2011;r, &#x2011;&#x2011;resource 	| Name of the resource to delete. Required.                  | Text 	|
+
+### Examples
+
+Delete the resource named `g4` from the backend named `aws`
+```bash
+komo backend delete-resource -b aws -r g4
+```

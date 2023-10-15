@@ -2,22 +2,27 @@
 title: create
 ---
 
-## compute create
+Create the compute infrastructure needed to run Komodo jobs using Terraform.
+This is provided as a convenient alternative to setting up your infrastructure manually.
+<Note>Currently, only AWS EKS clusters are supported with this command</Note>
 
-The `compute create` command is used to create a Komodo compute cluster.
 
 ### Usage
 
-```
-komo compute create [OPTIONS] NAME
-```
+`komo compute create [OPTIONS]`
 
 ### Options
 
-```
-  -b, --backend: Name of the compute cluster type to create.
-```
+| Option                              	    | Description                                                     	| Type 	|
+|-----------------------------------------  |-----------------------------------------------------------------	|------	|
+| &#x2011;n, &#x2011;&#x2011;name 	        | The name for the newly created compute infrastructure. Required.  | Text 	|
+| &#x2011;t, &#x2011;&#x2011;compute-type  	| The type of compute infrastructure to create. Defaults to eks.    | [eks] |
+| &#x2011;m, &#x2011;&#x2011;manual-confirm | Manually confirm terraform plan.                                  |      	|
 
-```
-  -c, --cluster_id: ID of the cluster to create.  [required]
+
+### Examples
+
+Create an AWS EKS cluster named `my-cluster`
+```bash
+komo compute create -t eks -n my-cluster
 ```

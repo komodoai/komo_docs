@@ -2,22 +2,23 @@
 title: terminate
 ---
 
-## compute terminate
-
-The `compute terminate` command is used to terminate a compute cluster. To terminate a machine, you need to specify the machine name as an argument. For example, to terminate a machine `machine123`, you can use the following command:
+Terminate infrastructure created with `komo compute create`.
 
 ### Usage
 
-```
-komo compute terminate [OPTIONS]
-```
+`komo compute terminate [OPTIONS]`
 
 ### Options
 
-```
--b, --backend: Type of the compute cluster type to destroy.
-```
+| Option                              	    | Description                                                     	| Type 	|
+|-----------------------------------------  |-----------------------------------------------------------------	|------	|
+| &#x2011;n, &#x2011;&#x2011;name 	        | The name of compute infrastructure to destroy. Required.  | Text 	|
+| &#x2011;t, &#x2011;&#x2011;compute-type  	| The type of compute infrastructure to destory. Defaults to eks.   | [eks] |
+| &#x2011;m, &#x2011;&#x2011;manual-confirm | Manually confirm terraform plan.                                  |      	|
 
-```
--c, --cluster-id: ID of the cluster to destroy.
+### Examples
+
+Destroy the EKS cluster named `my-cluster`
+```bash
+komo compute terminate -n my-cluster -t eks
 ```

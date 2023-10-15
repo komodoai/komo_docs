@@ -1,23 +1,33 @@
 ---
 title: logs
 ---
-## logs
-The `logs` command is used to get logs for a Komodo job. This command allows you to specify the job ID and whether to watch the logs or just output the current logs. To retrieve logs for a job with ID abc123 and watch for new log entries, run:
-
-```
-komo logs job123
-```
-This will display the logs for the specified job.
+Get the logs for a given job.
 
 ### Usage
 
-```
-komo logs [OPTIONS] JOB_ID
-```
+`komo logs [OPTIONS] JOB_ID`
 
 ### Options
-The komo logs command supports the following options:
 
+| Option                              	| Description                                                                                                                                                                                             | Type |
+|-------------------------------------	|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----- |
+| &#x2011;w, &#x2011;&#x2011;watch      | If this option is specified, this command will continuously output new log entries until the job finishes. Otherwise, this command will output the current logs and then exit.  |      |
+| &#x2011;i, &#x2011;&#x2011;node-index | The index of the node to get logs from. Defaults to 0.                                                                                                                                                  | Int  |
+
+
+### Examples
+
+Get the logs for job `abcdef123456`
+```bash
+komo logs abcdef123456
 ```
--w, --watch: Whether to watch the logs or just output the current logs. If this option is specified, the command will continuously output new log entries as they appear. If this option is not specified, the command will output the current logs and then exit.
+
+Get the logs for the second node of job `abcdef123456`
+```bash
+komo logs -i 1 abcdef123456
+```
+
+Get the logs for job `abcdef123456` and keep outputting logs from the job as they're generated until the job finishes
+```bash
+komo logs -w abcdef123456
 ```

@@ -1,13 +1,23 @@
 ---
 title: task
 ---
-## init task
-The `init task` command is used to initialize a new Komodo task file for the current project.
-To initialize a new task, run the following command:
+Initialize a new Komodo task file for the current project.
 
-```
-komo init task
-```
+### Usage
 
-This will create a template project configuration in  `.komo/my-task-name.yaml`.
-You can then edit this file according to your needs.
+`komo init task [OPTIONS]`
+
+### Options
+
+| Option                              	| Description                                                                                    | Type |
+|-------------------------------------	|----------------------------------------------------------------------------------------------- |----- |
+| &#x2011;n, &#x2011;&#x2011;name  	| The name of the task to create. Required.   | Text 	|
+
+
+### Examples
+
+Create a task named `my-task`
+<Note>This will create a template task configuration in  `.komo/my-task.yaml`. You can then edit this file according to your needs.</Note>
+```bash
+komo init task -n my-task
+```

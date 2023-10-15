@@ -2,12 +2,21 @@
 title: terminate
 ---
 
-## machine terminate
-
-The `machine terminate` command is used to terminate the machine. To terminate a machine, you need to specify the machine name as an argument. For example, to terminate a machine `machine123`, you can use the following command:
+Terminate a machine.
 
 ### Usage
 
-```
-komo machine terminate machine1234
+`komo machine terminate [OPTIONS] NAME`
+
+### Options
+
+| Option                              	    | Description                                        | Type 	|
+|-----------------------------------------  |--------------------------------------------------- |------	|
+| &#x2011;f, &#x2011;&#x2011;force      	  | Delete the machine even if it cannot be reached. This can result in a machine continuing to run on your infrastructure, but no longer being tracked by Komodo. Use with caution.      | |
+
+### Examples
+
+Terminate a machine named `dev`
+```bash
+komo machine terminate dev
 ```

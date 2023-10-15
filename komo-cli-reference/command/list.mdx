@@ -1,11 +1,27 @@
 ---
 title: list
 ---
-## list
-The `list` command is used to list all the jobs that have been executed on Komodo. To list all jobs, simply run the following command:
+List all of your jobs.
 
-```
+### Usage
+`komo list [OPTIONS]`
+
+### Options
+
+| Option                              	| Description                                                                                    | Type |
+|-------------------------------------	|----------------------------------------------------------------------------------------------- |----- |
+| &#x2011;l, &#x2011;&#x2011;limit  	| The limit to the number of jobs that are listed. Defaults to 10. Use -1 to display all jobs.   | Int 	|
+| &#x2011;s, &#x2011;&#x2011;skip 	    | The number of jobs to skip                                                              	     | Int 	|
+
+
+### Examples
+
+List your jobs
+```bash
 komo list
 ```
 
-This will display a list of all the jobs, along with their status, ID, and creation time.
+List 5 jobs, but skip the first 3 that would normally be displayed
+```bash
+komo list -l 5 -s 3
+```

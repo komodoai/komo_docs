@@ -2,21 +2,25 @@
 title: create
 ---
 
-### backend create
-
-The `backend create` command is used to create a backend entity on the API server. A backend entity can then be used to run your jobs.
+Create a Komodo backend for your existing compute infrastructure.<br/><br/>
+You will be prompted to enter the information needed to connect to your infrastructure.
+The exact information you'll be prompted to enter depends on the type of backend you're creating.
 
 ### Usage
 
-```
-komo backend create [OPTIONS] NAME
-```
+`komo backend create [OPTIONS]`
 
 ### Options
 
-```
-Options:
-  -t, --type [local|kubernetes]  Type of backend to create.  [required]
-```
+| Option                              	    | Description                                        | Type 	|
+|-----------------------------------------  |--------------------------------------------------- |------	|
+| &#x2011;n, &#x2011;&#x2011;name 	        | The name for the newly created backend. Required.  | Text 	|
+| &#x2011;t, &#x2011;&#x2011;backend-type  	| The type of backend to create. Required.           | [local \| kubernetes \| aws-batch] |
 
-You will be prompted for backend details.
+### Examples
+
+Create an AWS Batch backend named `aws`
+<Note>You will be prompted to enter information specific to this type of backend</Note>
+```bash
+komo backend create -t aws-batch -n aws
+```

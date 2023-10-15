@@ -2,12 +2,21 @@
 title: create
 ---
 
-## api-key create
+Create an API key.
 
-The `api-key create` command is used to log into Komodo and retrieve your API key. This key is required to use Komodo's services. To retrieve your API key, simply run the following command:
+### Usage
 
-```
+`komo api-key create [OPTIONS]`
+
+### Options
+
+| Option                              	| Description                                                                                    | Type |
+|-------------------------------------	|----------------------------------------------------------------------------------------------- |----- |
+
+### Examples
+
+Create an API key
+<Note>You will be prompted to enter your Komodo username (email) and password. The newly created API key will be stored in `~/.komo/api-key`</Note>
+```bash
 komo api-key create
 ```
-
-You will be prompted to enter your Komodo username (email) and password. Once authenticated, your API key and the instructions on where to place it will be displayed in the output.

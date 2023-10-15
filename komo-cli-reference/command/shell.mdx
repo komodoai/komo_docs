@@ -1,9 +1,26 @@
 ---
 title: shell
 ---
-## shell
-The `shell` command is used to open a shell into a running Komodo job. This allows you to interact with the job's environment and execute commands inside it. To open a shell, you need to specify the job ID as an argument. For example, to open a shell into job `job123`, you can use the following command:
+Open a shell into a running job.
 
+### Usage
+
+`komo shell [OPTIONS] JOB_ID`
+
+### Options
+
+| Option                              	| Description                                                                                                                                                                                             | Type |
+|-------------------------------------	|---------------------------------------------------------|----- |
+| &#x2011;i, &#x2011;&#x2011;node-index | The index of the node to get logs from. Defaults to 0.  | Int  |
+
+### Examples
+
+Open a shell into job `abcdef123456`
+```bash
+komo shell abcdef123456
 ```
-komo shell job123
+
+Open a shell into the second node of job `abcdef123456`
+```bash
+komo shell -i 1 abcdef123456
 ```

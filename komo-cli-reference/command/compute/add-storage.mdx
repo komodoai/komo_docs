@@ -2,24 +2,24 @@
 title: add-storage
 ---
 
-## compute add-storage
-
-The `compute add-storage` command is used to add a storage provider to the Komodo compute cluster.
+Add a storage provider to your compute infrastructure that was created with `komo compute create`.
+<Note>This currently only supports creating an FSx for Lustre drive. Support for EFS file systems coming soon.</Note>
 
 ### Usage
 
-```
-komo compute add-storage [OPTIONS]
-```
+`komo compute add-storage [OPTIONS]`
 
 ### Options
 
-```
--s, --storage-type: Storage type to add.
-```
+| Option                              	    | Description                                                       	| Type 	|
+|-----------------------------------------  |-------------------------------------------------------------------	|------	|
+| &#x2011;s, &#x2011;&#x2011;storage-type 	| The type of storage to create. Defaults to fsx.                       | [fsx] |
+| &#x2011;&#x2011;s3-bucket  	            | Name of the S3 bucket backing the storage (only applicable for fsx)   | Text  |
+| &#x2011;m, &#x2011;&#x2011;manual-confirm | Manually confirm terraform plan.                                      |      	|
 
-```
---s3-bucket: (required) Name of the S3 bucket backing the storage.
-```
+### Examples
 
-Supported storage types: `fsx`
+Create an FSx for Lustre drive, backed by an s3 bucket named `s3://my-bucket`
+```bash
+komo compute add-storage -s fsx --s3-bucket my-bucket
+```

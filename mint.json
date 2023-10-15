@@ -75,7 +75,7 @@
         {
           "group": "machine",
           "pages": [
-            "komo-cli-reference/command/machine/start",
+            "komo-cli-reference/command/machine/create",
             "komo-cli-reference/command/machine/shell",
             "komo-cli-reference/command/machine/list",
             "komo-cli-reference/command/machine/terminate"
