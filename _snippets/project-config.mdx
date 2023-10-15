@@ -1,6 +1,8 @@
-<Note>Each key in the `backends` section in the project config must correspond to the name of a backend you previously created.</Note>
+<Note>Each key in the `configs` section in the project config must correspond to the name of a backend you previously created.</Note>
 
 ```yaml
+kind: project
+
 # When a workspace is defined for a backend, a new docker image is created
 # by taking your base image copying in the workspace into the image. As a result,
 # this image needs to be uploaded somewhere for the backend to download it from.
@@ -8,55 +10,116 @@
 # backend is set up with the correct permissions to download images from this repository.
 # TODO: Create a docker repo and update this field accordingly
 overlay_images_repository: my-docker-repo
-backends:
 
-  local:
-    # TODO: set this to the docker image that you want to use locally
-    base_image: "python:3.8"
-    # TODO: set this to the directory inside your image where your command will run
-    workdir: "/app"
-    # This is the directory that will be copied into your docker image before running it.
-    # This isn't needed for the local backend, because you can mount in any directory you
-    # want, instead of copying it into the docker image.
-    workspace: null
-    # TODO: You can set any number of environment variables here.
-    env:
-      test_var: "test_value"
-    # This is where you can specify the directories you want to mount into your container.
-    mounts:
-      # Mount in the current directory into /app
-      - source: .
-        target: /app
-        type: bind
+configs:
 
-  my-kubernetes-backend:
-    # TODO: set this to the docker image that you want to use locally
-    base_image: "python:3.9"
-    # TODO: set this to the directory inside your image where your command will run
+  # Config for backend 'my-aws-batch-backend'
+  my-aws-batch-backend:
+    # TODO: Set this to the docker image that you want to use. If a requirements.txt is provided 
+    # in your workspace (defined below), those requirements will be installed into this image.
+    image: "pytorch/pytorch"
+  
+    # TODO: Set this to the directory inside your image where your command will run.
     workdir: "/app"
+  
     # This is the directory that will be copied into your docker image before running it.
     # Specifying '.' as shown below will use the current project directory.
     # This means that every time you run a job, all of the files you have in your project directory
     # (doesn't matter if they're committed with git or not) will be copied into your docker image
     # before starting the job.
     workspace: .
-    # TODO: You can set any number of environment variables here.
+  
+    # TODO: Set the environment variables you want to use here.
     env:
       test_var: "test_value"
-    # This is where you can specify the directories you want to mount into your container.
-    # These are NOT local directories, but rather directories that would exist in the node
-    # on your kubernetes cluster (eg. a shared file system)
-    # TODO: update these to the the mounts you want to use (and use [] for no mounts)
-    mounts: []
-      # Mount in /my-shared-directory (which exists on the node in kubernetes) into /data inside the container
-      # - source: /my-shared-directory
-      #   target: /data
-      #   type: bind
 
-    # This is the default resource that will be used for this backend if no resource is specified
-    default_resource: my-resource
+    # This is where you can specify anything you want to mount into your container.
+    # This could be a shared file system, like an FSx or EFS drive, for example.
+    # 
+    # Example:
+    # 
+    # Mount in an FSx drive that is linked to my-s3-bucket (which exists in AWS and has been added as storage) into /data inside the container
+    # - source: /fsx-claim-my-s3-bucket
+    #  target: /data
+    #  type: volume
+    # 
+    # 
+    # TODO: add the mounts you want to use
+    mounts: []
+
+    # This is the default resource (defined in the global config) that will be used for this backend if no resource is specified
+    # TODO: fill this in with the desired resource
+    default_resource: gpu-large
+
+  # Config for backend 'my-kubernetes-backend'
+  my-kubernetes-backend:
+    # TODO: Set this to the docker image that you want to use. If a requirements.txt is provided 
+    # in your workspace (defined below), those requirements will be installed into this image.
+    image: "pytorch/pytorch"
+  
+    # TODO: Set this to the directory inside your image where your command will run.
+    workdir: "/app"
+  
+    # This is the directory that will be copied into your docker image before running it.
+    # Specifying '.' as shown below will use the current project directory.
+    # This means that every time you run a job, all of the files you have in your project directory
+    # (doesn't matter if they're committed with git or not) will be copied into your docker image
+    # before starting the job.
+    workspace: .
+  
+    # TODO: Set the environment variables you want to use here.
+    env:
+      test_var: "test_value"
+
+    # This is where you can specify anything you want to mount into your container.
+    # This could be a shared file system, like an FSx or EFS drive, for example.
+    # 
+    # Example:
+    # 
+    # Mount in an FSx drive that is linked to my-s3-bucket (which exists in AWS and has been added as storage) into /data inside the container
+    # - source: /fsx-claim-my-s3-bucket
+    #  target: /data
+    #  type: volume
+    # 
+    # 
+    # TODO: add the mounts you want to use
+    mounts: []
+
+    # This is the default resource (defined in the global config) that will be used for this backend if no resource is specified
+    # TODO: fill this in with the desired resource
+    default_resource: <name of resource>
+
+  # Config for backend 'my-local-backend'
+  my-local-backend:
+    # TODO: Set this to the docker image that you want to use. If a requirements.txt is provided 
+    # in your workspace (defined below), those requirements will be installed into this image.
+    image: "python:3.10"
+
+    # TODO: set this to the directory inside your image where your command will run
+    workdir: "/app"
+
+    # This is the directory that will be copied into your docker image before running it.
+    # This isn't needed for the local backend, because you can mount in any directory you
+    # want, instead of copying it into the docker image.
+    workspace: null
+
+    # TODO: Set the environment variables you want to use here.
+    env:
+      test_var: "test_value"
+
+    # This is where you can specify anything you want to mount into your container.
+    # We recommend setting the above workspace to null, and then mounting in your project
+    # directory instead, like this:
+    # 
+    # - source: .
+    #   target: /app
+    #   type: bind
+    # 
+    # 
+    # TODO: add the mounts you want to use
+    mounts: []
 
 # The default backend to use if the --backend flag isn't specified
 # TODO: Change this to whichever backend you choose
-default_backend: "my-kubernetes-backend"
+default_backend: "my-aws-batch-backend"
 ```
