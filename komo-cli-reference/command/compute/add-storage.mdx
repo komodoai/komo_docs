@@ -13,7 +13,7 @@ Add a storage provider to your compute infrastructure that was created with `kom
 
 | Option                              	    | Description                                                       	| Type 	|
 |-----------------------------------------  |-------------------------------------------------------------------	|------	|
-| &#x2011;s, &#x2011;&#x2011;storage-type 	| The type of storage to create. Defaults to fsx.                       | [fsx] |
+| &#x2011;t, &#x2011;&#x2011;storage-type 	| The type of storage to create. Defaults to fsx.                       | [fsx] |
 | &#x2011;&#x2011;s3-bucket  	            | Name of the S3 bucket backing the storage (only applicable for fsx)   | Text  |
 | &#x2011;m, &#x2011;&#x2011;manual-confirm | Manually confirm terraform plan.                                      |      	|
 
@@ -21,5 +21,5 @@ Add a storage provider to your compute infrastructure that was created with `kom
 
 Create an FSx for Lustre drive, backed by an s3 bucket named `s3://my-bucket`
 ```bash
-komo compute add-storage -s fsx --s3-bucket my-bucket
+komo compute add-storage -t fsx --s3-bucket my-bucket
 ```

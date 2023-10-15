@@ -25,11 +25,7 @@ Komodo AI can run your jobs on various backends. The choice of backend is yours 
     </Accordion>
     <Accordion title="Kubernetes">
         If you plan on using Kubernetes on AWS EKS, we currently support automatically setting up your infrastructure 
-        with Terraform by running:
-        
-        ```bash
-        komo compute create --cluster-id my-cluster-name
-        ```
+        with Terraform using the [komo compute create](./komo-cli-reference/command/compute/create) command.
         
         Once the command finishes running, it will output some information that you'll need for the next step.
 
@@ -143,7 +139,7 @@ Komodo AI can run your jobs on various backends. The choice of backend is yours 
     komo backend add-resource -b my-backend -n my-resource
     ```
     <Tip>You do not need to do this for Local backends</Tip>
-    You will be prompted to enter more information about which type of machine you want to use.
+    You will be prompted to enter more information about the compute that you want to use.
 
     You will reference these backends and resources when launching jobs/machines.
   </Step>
