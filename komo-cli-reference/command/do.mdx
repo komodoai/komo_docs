@@ -1,0 +1,27 @@
+---
+title: do
+---
+
+Execute a task file. This is an alternative way to launch jobs instead of using [`komo run`](./run).
+
+You can create a task file with the [`komo init task`](./init/task) command.
+
+### Usage
+
+`komo do [OPTIONS]`
+
+### Options
+
+| Option                              	| Description                                                                                                                                                                                             | Type |
+|-------------------------------------	|---------------------------------------------------------|----- |
+| &#x2011;f, &#x2011;&#x2011;file | The task file to execute.  | Text  |
+| &#x2011;d, &#x2011;&#x2011;detach   	| Exit after the job is started instead of following the logs     |      	|
+
+### Examples
+
+Execute a task file
+
+<Info>You can create a task file using [`komo init task`](./init/task)</Info>
+```bash
+komo do -f .komo/my-task-file.yaml
+```

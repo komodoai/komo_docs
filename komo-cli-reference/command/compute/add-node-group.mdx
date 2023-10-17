@@ -1,0 +1,26 @@
+---
+title: add-node-group
+---
+<Info>This currently only supports creating node groups on AWS EKS.</Info>
+
+Add a node group to your compute infrastructure that was created with `komo compute create`.
+
+### Usage
+
+`komo compute add-node-group [OPTIONS]`
+
+### Options
+
+| Option                              	    | Description                                                       	| Type 	|
+|-----------------------------------------  |-------------------------------------------------------------------	|------	|
+| &#x2011;n, &#x2011;&#x2011;name 	| The name of the node group. Required.                       | Text |
+| &#x2011;t, &#x2011;&#x2011;instance-type  	            | The type of instance to add. Required.| Text  |
+| &#x2011;c, &#x2011;&#x2011;instance-max-count  	            | The maximum number of these instances to be allowed to run at any given time. Required.  | Int  |
+| &#x2011;m, &#x2011;&#x2011;manual-confirm | Manually confirm terraform plan.                                      |      	|
+
+### Examples
+
+Create a node group named `gpu-small`, containing at most 5 g4dn.xlarge machines at any given time.
+```bash
+komo compute add-node-group -n gpu-small -t g4dn.xlarge -c 5
+```

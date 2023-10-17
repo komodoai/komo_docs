@@ -1,0 +1,134 @@
+---
+title: Jobs
+---
+
+# Running Jobs
+
+To run a job, the first thing you need to do is make sure that you have
+[created a project config file](./komo-cli-reference/command/init/project) in `.komo/project.yaml`.
+
+There are 2 different ways to launch jobs; either with the `komo run` command or with the `komo do` command.
+Both options are described below.
+
+## komo run
+You can use the [`komo run`](./komo-cli-reference/command/run) command to start a job.
+For example, you could run a python script on your local machine with the following command:
+
+<Note>
+This assumes the following:
+1. You have a `train.py` script in your project directory.
+2. You created a backend named `local`.
+</Note>
+<Info>
+We use `--` to separate args to the CLI from args to your script.
+</Info>
+```bash
+komo run -b local -- python train.py --model llm_small
+```
+
+After running that job on your local machine, you might want to then migrate to the cloud so you
+can start a much larger multi-node training job. You can do so like this:
+
+<Note>
+This assumes the following:
+1. You have a `train.py` script in your project directory.
+2. You created a backend named `aws`.
+3. You created a resource named `gpu-large` for your `aws` backend.
+</Note>
+```bash
+# This will launch a distributed training job across
+# 10 machines on your aws backend
+komo run -b aws -n 10 -r gpu-large -- python train.py --model llm_large
+```
+
+## komo do
+As an alternative to the `komo run` command, you can also run a job by
+[creating a task file](./komo-cli-reference/command/init/task), and then
+executing it using the [`komo do`](./komo-cli-reference/command/do) command
+(komo-do...get it?).
+
+For example, if we wanted to run the same 10-node job as above, our task file
+would look like this:
+
+```yaml
+kind: job
+
+backend: aws
+resource: gpu-large
+
+command: [
+  "python",
+  "train.py",
+  "--model",
+  "llm_large"
+]
+
+num_nodes: 10
+
+# Here is where you can override any of the config variables in the section of your
+# project config file corresponding to the backend you're using. For example, if you
+# wanted to use a different image, you could do so like this:
+# 
+# config:
+#   image: my_image:latest
+# 
+# This is the same as the '--config' option in the 'komo run' command.
+config: {}
+```
+
+And then you could start the job like this:
+
+```bash
+komo do -f .komo/my-task-file.yaml
+```
+
+# Get the logs for jobs
+
+You can get the logs for a job by running:
+
+```bash
+komo logs my-job-id
+```
+
+See the [reference](./komo-cli-reference/command/logs) for more information on this command.
+
+# Listing jobs
+
+You can list all of your jobs by simply running:
+
+```bash
+komo list
+```
+
+See the [reference](./komo-cli-reference/command/list) for more information on this command.
+
+# Describing jobs
+
+You can describe a job to get more information about it, such as the backend job ID
+(the ID of the job on whatever backend it is running on), by simply running:
+
+```bash
+komo describe my-job-id
+```
+
+See the [reference](./komo-cli-reference/command/describe) for more information on this command.
+
+# Start a shell into a job
+
+You can start a shell into a job to help with debugging by running:
+
+```bash
+komo shell my-job-id
+```
+
+See the [reference](./komo-cli-reference/command/shell) for more information on this command.
+
+# Cancelling jobs
+
+You can cancel a job by running:
+
+```bash
+komo cancel my-job-id
+```
+
+See the [reference](./komo-cli-reference/command/cancel) for more information on this command.

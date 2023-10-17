@@ -27,16 +27,21 @@
       "group": "Home",
       "pages": [
         "introduction",
-        "getting-started"
+        "getting-started",
+        "jobs",
+        "machines"
       ]
     },
     {
       "group": "Komo CLI Reference",
       "pages": [
         "komo-cli-reference/command/run",
+        "komo-cli-reference/command/describe",
         "komo-cli-reference/command/list",
         "komo-cli-reference/command/logs",
         "komo-cli-reference/command/shell",
+        "komo-cli-reference/command/do",
+        "komo-cli-reference/command/register",
         {
           "group": "api-key",
           "pages": [
@@ -67,9 +72,11 @@
           "pages": [
             "komo-cli-reference/command/compute/create",
             "komo-cli-reference/command/compute/list",
-            "komo-cli-reference/command/compute/terminate",
+            "komo-cli-reference/command/compute/add-node-group",
+            "komo-cli-reference/command/compute/remove-node-group",
             "komo-cli-reference/command/compute/add-storage",
-            "komo-cli-reference/command/compute/remove-storage"
+            "komo-cli-reference/command/compute/remove-storage",
+            "komo-cli-reference/command/compute/terminate"
           ]
         },
         {
@@ -77,6 +84,7 @@
           "pages": [
             "komo-cli-reference/command/machine/create",
             "komo-cli-reference/command/machine/shell",
+            "komo-cli-reference/command/machine/vscode",
             "komo-cli-reference/command/machine/list",
             "komo-cli-reference/command/machine/terminate"
           ]

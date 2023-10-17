@@ -1,0 +1,60 @@
+---
+title: Machines
+---
+
+Machines are essentially long-running jobs that you can use for active development.
+Once you start a machine, you can connect to it either by opening a shell into it, or through
+VSCode, where you can edit files and test out your changes as you please.
+
+<Note>Unlike jobs, you must terminate machines manually once you are finished with them.</Note>
+
+# Starting a machine
+
+You can start a machine on your local machine like this:
+
+<Note>This assumes you have created a backend named `local`</Note>
+```bash
+# this will create a machine named 'dev'
+komo machine create -b local dev
+```
+
+Similarly, you can create a machine on a cloud backend like this:
+
+<Note>This assumes you have created a backend named `aws` and a resource named `gpu-large` for that backend.</Note>
+```bash
+# this will create a machine named 'cloud-dev'
+komo machine create -b aws -r gpu-large cloud-dev
+```
+
+See the [reference](./komo-cli-reference/command/machine/create) for more information on this command.
+
+# Connecting to a machine
+
+You can open a shell into a machine like this:
+
+<Note>This assumes you have created a machine named `dev`</Note>
+```bash
+komo machine shell dev
+```
+
+You can also open a VSCode window into a machine like this:
+
+<Info>This feature currently is only supported by the Local backend, but support for other types of backends is coming soon!</Info>
+
+<Note>This assumes you have created a machine named `dev`</Note>
+```bash
+komo machine vscode dev
+```
+
+See the [reference](./komo-cli-reference/command/machine/shell) for more information on this command.
+
+# Terminating a machine
+
+Once you are done with a machine, you can terminate it like this:
+
+<Note>This assumes you have created a machine named `dev`</Note>
+```bash
+komo machine terminate dev
+```
+
+See the [reference](./komo-cli-reference/command/machine/terminate) for more information on this command.

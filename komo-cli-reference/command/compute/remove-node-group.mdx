@@ -1,0 +1,23 @@
+---
+title: remove-node-group
+---
+
+Destroy a node group that was created with `komo compute add-node-group`.
+
+### Usage
+
+`komo compute remove-node-group [OPTIONS]`
+
+### Options
+
+| Option                              	    | Description                                                       	| Type 	|
+|-----------------------------------------  |-------------------------------------------------------------------	|------	|
+| &#x2011;n, &#x2011;&#x2011;node-group-name 	| The name of the node group. Required.                     | [fsx] |
+| &#x2011;m, &#x2011;&#x2011;manual-confirm | Manually confirm terraform plan.                                      |      	|
+
+### Examples
+
+Destroy a node group named `gpu-small`
+```bash
+komo compute remove-node-group -n gpu-small
+```

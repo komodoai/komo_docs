@@ -2,23 +2,24 @@
 title: remove-storage
 ---
 
-Destroy a storage provider that was created with `komo compute add-storage`.
+## compute remove-storage
+
+The `compute remove-storage` command is used to remove a storage provider from the Komodo compute cluster.
 
 ### Usage
 
-`komo compute remove-storage [OPTIONS]`
+```
+komo compute remove-storage [OPTIONS]
+```
 
 ### Options
 
-| Option                              	    | Description                                                       	| Type 	|
-|-----------------------------------------  |-------------------------------------------------------------------	|------	|
-| &#x2011;s, &#x2011;&#x2011;storage-type 	| The type of storage to destroy. Defaults to fsx.                      | [fsx] |
-| &#x2011;&#x2011;s3-bucket  	            | Name of the S3 bucket backing the storage (only applicable for fsx)   | Text  |
-| &#x2011;m, &#x2011;&#x2011;manual-confirm | Manually confirm terraform plan.                                      |      	|
-
-### Examples
-
-Destroy an FSx for Lustre drive that is backed by an s3 bucket named `s3://my-bucket`
-```bash
-komo compute remove-storage -s fsx --s3-bucket my-bucket
 ```
+-s, --storage-type: Storage type to remove.
+```
+
+```
+--s3-bucket: (required) Name of the S3 bucket backing the storage.
+```
+
+Supported storage types: `fsx`
