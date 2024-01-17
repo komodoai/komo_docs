@@ -178,11 +178,11 @@ Komodo AI can run your jobs on various backends. The choice of backend is yours 
       <Note>You can set `-n` to whatever name you like. This is the name of backend that will be referenced in your project config file and when running jobs.</Note>
 
       This command will prompt you to enter the following information:
-      - `access_key_id`: The access key ID from the credentials you downloaded for the new user you created
-      - `secret_access_key`: The secrety access key from the credentials you downloaded for the new user you created
-      - `docker_repo`: This is an ECR repo called `komodo-overlays` that was created when running `komo compute create`. Log into ECR in the AWS console to get the URI for it (it should look like xxxxxxxx.dkr.ecr.your-region.amazonaws.com/komodo-overlays)
-      - `ssh-key`: This is the path to an SSH key that was created when running `komo compute create`. It should be `~/.komo/compute-komodo-ssh-key-my-cluster`, replacing `my-cluster` with whatever name you provided to the `komo compute create` command.
-      - `basion-ip-address`: This is the IP address of a small (t2.micro) instance that is created as a proxy server to allow you to ssh into your jobs/machines. You can find this by running `komo compute list`.
+      - **access_key_id**: The access key ID from the credentials you downloaded for the new user you created
+      - **secret_access_key**: The secrety access key from the credentials you downloaded for the new user you created
+      - **docker_repo**: This is an ECR repo called `komodo-overlays` that was created when running `komo compute create`. You can find this by running the `komo compute list` command.
+      - **ssh-key**: This is the path to an SSH key that was created when running `komo compute create`. You can find this by running the `komo compute list` command.
+      - **basion-ip-address**: This is the IP address of a small (t2.micro) instance that is created as a proxy server to allow you to ssh into your jobs/machines. You can find this by running the `komo compute list` command.
 
       And finally, for each instance type you set up using `komo compute add-aws-instance`, create a resource like so:
       
@@ -191,8 +191,8 @@ Komodo AI can run your jobs on various backends. The choice of backend is yours 
       ```
 
       This will prompt you to enter the following information:
-      - instance_type: The instance type you specified to `komo compute add-aws-instance`
-      - aws_batch_queue: You can find this by running `komo compute list` and looking in the `queue_arns` section. Enter the last part of the queue related to this instance. In this example, that would be `komodo-my-cluster-p4-24xl-queue`
+      - **instance_type**: The instance type you specified to `komo compute add-aws-instance`
+      - **aws_batch_queue**: You can find this by running `komo compute list` and looking in the `queue_arns` section. Enter the last part of the queue related to this instance. In this example, that would be `komodo-my-cluster-p4-24xl-queue`
     </Accordion>
 
     <Accordion title="Kubernetes">
