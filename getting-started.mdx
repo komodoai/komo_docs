@@ -192,7 +192,7 @@ Komodo AI can run your jobs on various backends. The choice of backend is yours 
 
       This will prompt you to enter the following information:
       - **instance_type**: The instance type you specified to `komo compute add-aws-instance`
-      - **aws_batch_queue**: You can find this by running `komo compute list` and looking in the `queue_arns` section. Enter the last part of the queue related to this instance. In this example, that would be `komodo-my-cluster-p4-24xl-queue`
+      - **aws_batch_queue**: You can find this by running `komo compute list` and looking in the `queue_arns` section. Enter the **last part** (don't include the prefix) of the queue related to this instance. In this example, that would be `komodo-my-cluster-p4-24xl-queue`
     </Accordion>
 
     <Accordion title="Kubernetes">
