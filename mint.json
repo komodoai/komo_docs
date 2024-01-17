@@ -71,11 +71,8 @@
           "group": "compute",
           "pages": [
             "komo-cli-reference/command/compute/create",
+            "komo-cli-reference/command/compute/add-aws-instance",
             "komo-cli-reference/command/compute/list",
-            "komo-cli-reference/command/compute/add-node-group",
-            "komo-cli-reference/command/compute/remove-node-group",
-            "komo-cli-reference/command/compute/add-storage",
-            "komo-cli-reference/command/compute/remove-storage",
             "komo-cli-reference/command/compute/terminate"
           ]
         },

@@ -23,31 +23,46 @@ Komodo AI can run your jobs on various backends. The choice of backend is yours 
     komo api-key create
     ```
   </Step>
-  <Step title="Apply promo code">
-    We are currently in a private beta, and so you will need a promo code to use Komodo. If you do not have one, send us an email at hello@komodoai.dev
-    to get access (and also a free working session with an engineer to help you get started!).
-
-    ```bash
-    komo apply-promo-code <your promo code>
-    ```
-  </Step>
   <Step title="Setup your compute infrastructure">
     There are several different types of compute services that are supported. Follow the instructions for each type of compute service you'd like to use.
     <Accordion title="Local">
         To run jobs locally, you just need to make sure you have Docker [installed](https://docs.docker.com/engine/install/) and running.
     </Accordion>
+    <Accordion title="AWS">
+        First, make sure you have the following installed:
+
+        - [Docker](https://docs.docker.com/engine/install/)
+        - [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+        - [jq](https://jqlang.github.io/jq/download/)
+        - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+
+        Then, setup your base environment:
+
+        ```bash
+        komo compute create -t aws -n my-cluster --aws-profile <your aws profile (eg. default)> --aws-region your-region
+        ```
+
+        <Info>We only support running this command for one region at the moment. If you try to run this for a second region,
+        the first will get deleted. If you need to use multiple regions, let us know and we can prioritize this.</Info>
+
+        Next, for *each* instance type you want to use, run the following:
+
+        <Note>Don't worry, this won't launch any instances of this type, this is simply just to get your environment ready to launch these instances.</Note>
+
+        ```bash
+        komo compute add-aws-instance -t instance-type -n instance-type-alias --volume-size 100
+        ```
+
+        <Note>`--volume-size` is the size of the EBS volume that will be attached to the instance upon launching.</Note>
+        <Note>You can set `-n` to whatever you like, this is just the name you will use to refer to this instance type.
+        For example, for a p4d.24xlarge, you might name it `p4-24xl`, `a100x8`, or even just `gpu-large`.</Note>
+    </Accordion>
     <Accordion title="Kubernetes">
         <Note>We don't recommend using Kubernetes if you need support for autoscaling AND multi-node distributed training.
         This is because we use [Volcano](https://volcano.sh/en/) as our gang scheduler for multi-node jobs, which doesn't
         work well with autoscalers.</Note>
-        If you plan on using Kubernetes on AWS EKS, we currently support automatically setting up your infrastructure 
-        with Terraform using the [komo compute create](./komo-cli-reference/command/compute/create) command.
-        
-        Once the command finishes running, it will output some information that you'll need for the next step.
 
-        <Info>Support for creating clusters on other cloud services such as GCP GKE is coming soon.</Info>
-
-        If you'd rather bring over an existing Kubernetes cluster, follow the steps below to prepare it for use with Komodo.
+        Follow these steps to get your Kubernetes cluster ready for Komodo:
 
         <Tip>
             If you need help with the steps below, reach out to someone on the Platform
@@ -126,41 +141,78 @@ Komodo AI can run your jobs on various backends. The choice of backend is yours 
             ```
         </Accordion>
     </Accordion>
-    <Accordion title="AWS Batch">
-        Follow [these instructions](https://docs.aws.amazon.com/batch/latest/userguide/getting-started-ec2.html) to setup
-        AWS Batch (you must use EC2 as the compute backend, NOT Fargate or EKS).
-
-        We recommend setting it up such that there is one compute environment for each instance type that you want to use,
-        and then one queue that uses all the compute environments you created (`komo` will allow you to request which instance
-        type you want to use for a given job or machine).
-    </Accordion>
   </Step>
   <Step title="Create Komodo backends">
     Now that you've setup your backend infrastructure, you now just need to create a Komodo backend to point to your infrastructure.
-    A Komodo backend defines what compute service (eg. local, AWS Batch) you want to use for a given job.
+    A Komodo backend defines what compute service (eg. local, AWS) you want to use for a given job.
     For each backend, you will define 1 or more resources, which specify what type of machine you want to use for a given job
-    (eg. using a g4dn.xlarge machine on AWS Batch). You do not need to define resources for Local backends.
-
     
-    You create a backend with the following command:
+    <Accordion title="Local">
+      Simply just run:
 
-    ```bash
-    komo backend create -t [local | kubernetes | aws-batch] -n my-backend
-    ```
-    
-    Then just follow the instructions to initialize the backend.
+      ```bash
+      komo backend create -t local -n local
+      ```
 
-    And then for each type of resource you want to use on that backend, run:
+      <Note>You can specify whatever name you want for `-n`.</Note>
 
-    <Tip>You do not need to do this for Local backends</Tip>
-    
-    ```bash
-    komo backend add-resource -b my-backend -n my-resource
-    ```
+      This is all you need to do to set up the local backend. No need to create any resources.
+    </Accordion>
 
-    You will be prompted to enter more information about the compute that you want to use.
+    <Accordion title="AWS">
+      First, you'll need to create an IAM role that Komodo can use to launch jobs. From the IAM
+      section in the AWS console, create a new User with the following permissions:
 
-    You will reference these backends and resources when launching jobs/machines.
+      - `AWSBatchFullAccess`
+      - `DescribeInstanceTypes`
+      - `ECSExecuteCommand`
+
+      Make sure to download the credentials for this user and store them somewhere safe.
+
+      Next, you can create the backend like so:
+
+      ```bash
+      komo backend create -t aws -n aws
+      ```
+
+      <Note>You can set `-n` to whatever name you like. This is the name of backend that will be referenced in your project config file and when running jobs.</Note>
+
+      This command will prompt you to enter the following information:
+      - `access_key_id`: The access key ID from the credentials you downloaded for the new user you created
+      - `secret_access_key`: The secrety access key from the credentials you downloaded for the new user you created
+      - `docker_repo`: This is an ECR repo called `komodo-overlays` that was created when running `komo compute create`. Log into ECR in the AWS console to get the URI for it (it should look like xxxxxxxx.dkr.ecr.your-region.amazonaws.com/komodo-overlays)
+      - `ssh-key`: This is the path to an SSH key that was created when running `komo compute create`. It should be `~/.komo/compute-komodo-ssh-key-my-cluster`, replacing `my-cluster` with whatever name you provided to the `komo compute create` command.
+      - `basion-ip-address`: This is the IP address of a small (t2.micro) instance that is created as a proxy server to allow you to ssh into your jobs/machines. You can find this by running `komo compute list`.
+
+      And finally, for each instance type you set up using `komo compute add-aws-instance`, create a resource like so:
+      
+      ```bash
+      komo backend add-resource -b aws -n p4-24xl
+      ```
+
+      This will prompt you to enter the following information:
+      - instance_type: The instance type you specified to `komo compute add-aws-instance`
+      - aws_batch_queue: You can find this by running `komo compute list` and looking in the `queue_arns` section. Enter the last part of the queue related to this instance. In this example, that would be `komodo-my-cluster-p4-24xl-queue`
+    </Accordion>
+
+    <Accordion title="Kubernetes">
+      Create a Kubernetes backend as follows:
+
+      ```bash
+      komo backend create -t kubernetes -n my-cluster
+      ```
+
+      It will prompt you to enter some of the information you got from the previous step.
+
+      Next, create a resource for each machine type you want to use:
+
+      ```bash
+      komo backend add-resource -b my-cluster -n gpu-large
+      ```
+
+      It will prompt you to enter the hardware requirements for this resource (ie. how many cpus/gpus/mem you want).
+      It will prompt you to (optionally) enter an instance type. If entered, this will set the `node.kubernetes.io/instance-type` key of the pod capabilities accordingly for jobs/machines you create with this resource.
+    </Accordion>
   </Step>
   <Step title="Initialize a Komodo project in your repository">
     Initialize a new Komodo project by running the following command inside your project directory:
@@ -171,13 +223,16 @@ Komodo AI can run your jobs on various backends. The choice of backend is yours 
     
     This will create a template project configuration in  `.komo/project.yaml`. This will set up
     different configurations for the different backends you created earlier.
-    Edit this file to fit your needs (required and recommended fields to edit are marked with `TODO`).
+    Edit this file to fit your needs.
+
+    <Tip>You should be able to use this without any changes, as long as you have a requirements.txt file in your
+    project directory that has all the requirements needed to run your code.</Tip>
   </Step>
   <Step title="Run Your First Komodo Job">
     You are now ready to run your first job! 
     
     ```bash
-    komo run -b my-backend -r my-resource echo "Hello World!"
+    komo run -b aws -r p4-24xl echo "Hello World!"
     ```
     
     [Find full details on this command here.](./komo-cli-reference/command/run)
