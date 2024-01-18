@@ -27,19 +27,38 @@ komo run -b local -- python train.py --model llm_small
 ```
 
 After running that job on your local machine, you might want to then migrate to the cloud so you
-can start a much larger multi-node training job. You can do so like this:
+access more powerful machines. You can do so like this:
 
 <Note>
 This assumes the following:
 1. You have a `train.py` script in your project directory.
 2. You created a backend named `aws`.
-3. You created a resource named `gpu-large` for your `aws` backend.
+3. You created a resource named `p4-24xl` for your `aws` backend.
 </Note>
 ```bash
-# This will launch a distributed training job across
-# 10 machines on your aws backend
-komo run -b aws -n 10 -r gpu-large -- python train.py --model llm_large
+komo run -b aws -r p4-24xl -- python train.py --model llm_large
 ```
+
+### Distributed training
+
+You can scale up jobs across multiple nodes using the `-n` flag. For distributed jobs,
+the following environment variables are set for you to use in your application code:
+
+`NNODES`: The number of nodes launched for the job
+
+`NODE_INDEX`: The index of the current node (between 0 and `NNODES`-1)
+
+`NUM_GPUS`: The number of GPUs on each machine
+
+`NODE_0_IP_ADDRESS`: The IP address of the first node (used as the 'master' node to coordinate distributed operations)
+
+For example, you might use these environment variables with torchrun as follows:
+
+```bash
+komo run -b aws -r g4-24xl -n 4 -- torchrun train.py --nnodes \$NNODES --rdzv-endpoint \$NODE_0_IP_ADDRESS --rdzv-backend c10d --nproc-per-node \$NUM_GPUS train.py --epochs 100
+```
+
+Notice that by using these environment variables, you can easily change the value of `-n` and `-r` without needing to update the command you're runnning.
 
 ## komo do
 As an alternative to the `komo run` command, you can also run a job by
@@ -47,23 +66,32 @@ As an alternative to the `komo run` command, you can also run a job by
 executing it using the [`komo do`](./komo-cli-reference/command/do) command
 (komo-do...get it?).
 
-For example, if we wanted to run the same 10-node job as above, our task file
+For example, if we wanted to run the same 4-node job as above, our task file
 would look like this:
 
 ```yaml
 kind: job
 
 backend: aws
-resource: gpu-large
+resource: p4-24xl
 
 command: [
-  "python",
+  "torchrun",
   "train.py",
-  "--model",
-  "llm_large"
+  "--nnodes",
+  "$NNODES",
+  "--rdzv-endpoint",
+  "$NODE_0_IP_ADDRESS",
+  "--rdzv-backend",
+  "c10d",
+  "--nproc-per-node",
+  "$NUM_GPUS",
+  "train.py",
+  "--epochs",
+  "100"
 ]
 
-num_nodes: 10
+num_nodes: 4
 
 # Here is where you can override any of the config variables in the section of your
 # project config file corresponding to the backend you're using. For example, if you

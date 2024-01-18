@@ -14,6 +14,7 @@ Run any bash command on the backend and resource of your choice.
 |-------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------	|------	|
 | &#x2011;b, &#x2011;&#x2011;backend  	| Name of the backend to use. Defaults to the default backend specified in your project config.                                                                  	| Text 	|
 | &#x2011;r, &#x2011;&#x2011;resource 	| Name of the resource to use. Defaults to the default resource specified in your project config.                                                                	| Text 	|
+| &#x2011;n, &#x2011;&#x2011;num_nodes 	| The number of nodes to launch for this job (for multi-node distributed training)                                                                	| Int 	|
 | &#x2011;d, &#x2011;&#x2011;detach   	| Exit after the job is started instead of following the logs                                                                                                       	|      	|
 | &#x2011;c, &#x2011;&#x2011;config   	| Override any parameters in the section of your project config corresponding to the specified backend.<br />Values must be provided as a comma-separated list of key=value pairs. 	| Text 	|
 
@@ -24,18 +25,23 @@ Run a simple hello world job, using your default backend and resource
 komo run echo "Hello World"
 ```
 
-Run a python training job on your `aws` backend using resource `gpu-large`. We use `--` to separate
+Run a python training job on your `aws` backend using resource `g4-24xl`. We use `--` to separate
 the arguments to the CLI from the arguments to your script.
 
-<Note>This assumes you have created a backend named `aws` and a resource named `gpu-large` for that backend</Note>
+<Note>This assumes you have created a backend named `aws` and a resource named `g4-24xl` for that backend</Note>
 ```bash
-komo run -b aws -r gpu-large -- python train.py --epochs 100
+komo run -b aws -r g4-24xl -- python train.py --epochs 100
+```
+
+Run the same job, but distributed over 4 nodes using torchrun.
+```bash
+komo run -b aws -r g4-24xl -n 4 -- torchrun train.py --nnodes \$NNODES --rdzv-endpoint \$NODE_0_IP_ADDRESS --rdzv-backend c10d --nproc-per-node \$NUM_GPUS train.py --epochs 100
 ```
 
 Run the same job, this time overriding both the `workdir` and `image` specified in your
 project config for backend `aws`
 ```bash
-komo run -b aws -r gpu-large -c workdir=/app,image="pytorch/pytorch" -- python train.py --epochs 100
+komo run -b aws -r g4-24xl -c workdir=/app,image="pytorch/pytorch" -- python train.py --epochs 100
 ```
 
 Run a job and exit as soon as the job has started
