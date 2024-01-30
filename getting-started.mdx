@@ -23,52 +23,46 @@ Komodo AI can run your jobs on various backends. The choice of backend is yours 
     komo api-key create
     ```
   </Step>
-  <Step title="Setup your compute infrastructure">
-    There are several different types of compute services that are supported. Follow the instructions for each type of compute service you'd like to use.
+  <Step title="Setup your backend">
+    First, make sure you have [Docker](https://docs.docker.com/engine/install/) installed.
+    
+    Next, follow the instructions for the type of backend you'd like to create:
     <Accordion title="Local">
-        To run jobs locally, you just need to make sure you have Docker [installed](https://docs.docker.com/engine/install/) and running.
+        Simply just run:
+
+        ```bash
+        komo backend create -t local -n local
+        ```
+
+        <Note>You can specify whatever name you want using the `-n` flag.</Note>
     </Accordion>
     <Accordion title="AWS">
-        First, make sure you have the following installed:
-
-        - [Docker](https://docs.docker.com/engine/install/)
-        - [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
-        - [jq](https://jqlang.github.io/jq/download/)
-        - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-
-        Then, setup your base environment:
+        Simply just run:
 
         ```bash
-        komo compute create -t aws -n my-cluster --aws-profile <your aws profile (eg. default)> --aws-region your-region
+        komo backend create -t aws -n aws
         ```
 
-        <Info>We only support running this command for one region at the moment. If you try to run this for a second region,
-        the first will get deleted. If you need to use multiple regions, let us know and we can prioritize this.</Info>
+        This will prompt you to enter the region to create this backend in, along with
+        some information about which instance types you want to use.
 
-        Next, for *each* instance type you want to use, run the following:
-
-        <Note>Don't worry, this won't launch any instances of this type, this is simply just to get your environment ready to launch these instances.</Note>
-
-        ```bash
-        komo compute add-aws-instance -t instance-type -n instance-type-alias --volume-size 100
-        ```
-
-        <Note>`--volume-size` is the size of the EBS volume that will be attached to the instance upon launching.</Note>
-        <Note>You can set `-n` to whatever you like, this is just the name you will use to refer to this instance type.
-        For example, for a p4d.24xlarge, you might name it `p4-24xl`, `a100x8`, or even just `gpu-large`.</Note>
+        <Note>You can specify whatever name you want using the `-n` flag. For example, if you are creating multiple AWS backends in different
+        regions, you might name one `aws-us-east-1`. Or if you're only creating one AWS backend, you could just name it `aws`.</Note>
     </Accordion>
     <Accordion title="Kubernetes">
         <Note>We don't recommend using Kubernetes if you need support for autoscaling AND multi-node distributed training.
         This is because we use [Volcano](https://volcano.sh/en/) as our gang scheduler for multi-node jobs, which doesn't
         work well with autoscalers.</Note>
 
-        Follow these steps to get your Kubernetes cluster ready for Komodo:
-
         <Tip>
             If you need help with the steps below, reach out to someone on the Platform
             team in your organization or let us know and we'll be happy to work with you
             to get this set up!
         </Tip>
+
+        Follow these steps to get your Kubernetes cluster ready for Komodo:
+
+        
 
         <Accordion title="Install Volcano" icon="volcano">
             Komodo uses [Volcano](https://volcano.sh/en/) to schedule workloads on your Kubernetes cluster.
@@ -140,78 +134,15 @@ Komodo AI can run your jobs on various backends. The choice of backend is yours 
             echo "$TOKEN"
             ```
         </Accordion>
-    </Accordion>
-  </Step>
-  <Step title="Create Komodo backends">
-    Now that you've setup your backend infrastructure, you now just need to create a Komodo backend to point to your infrastructure.
-    A Komodo backend defines what compute service (eg. local, AWS) you want to use for a given job.
-    For each backend, you will define 1 or more resources, which specify what type of machine you want to use for a given job
-    
-    <Accordion title="Local">
-      Simply just run:
+        <Accordion title="Create the backend">
+          Simply just run:
 
-      ```bash
-      komo backend create -t local -n local
-      ```
+          ```bash
+          komo backend create -t kubernetes -n my-cluster
+          ```
 
-      <Note>You can specify whatever name you want for `-n`.</Note>
-
-      This is all you need to do to set up the local backend. No need to create any resources.
-    </Accordion>
-
-    <Accordion title="AWS">
-      First, you'll need to create an IAM role that Komodo can use to launch jobs. From the IAM
-      section in the AWS console, create a new User with the following permissions:
-
-      - `AWSBatchFullAccess`
-      - `DescribeInstanceTypes`
-      - `ECSExecuteCommand`
-
-      Make sure to download the credentials for this user and store them somewhere safe.
-
-      Next, you can create the backend like so:
-
-      ```bash
-      komo backend create -t aws -n aws
-      ```
-
-      <Note>You can set `-n` to whatever name you like. This is the name of backend that will be referenced in your project config file and when running jobs.</Note>
-
-      This command will prompt you to enter the following information:
-      - **access_key_id**: The access key ID from the credentials you downloaded for the new user you created
-      - **secret_access_key**: The secrety access key from the credentials you downloaded for the new user you created
-      - **docker_repo**: This is an ECR repo called `komodo-overlays` that was created when running `komo compute create`. You can find this by running the `komo compute list` command.
-      - **ssh-key**: This is the path to an SSH key that was created when running `komo compute create`. You can find this by running the `komo compute list` command.
-      - **basion-ip-address**: This is the IP address of a small (t2.micro) instance that is created as a proxy server to allow you to ssh into your jobs/machines. You can find this by running the `komo compute list` command.
-
-      And finally, for each instance type you set up using `komo compute add-aws-instance`, create a resource like so:
-      
-      ```bash
-      komo backend add-resource -b aws -n p4-24xl
-      ```
-
-      This will prompt you to enter the following information:
-      - **instance_type**: The instance type you specified to `komo compute add-aws-instance`
-      - **aws_batch_queue**: You can find this by running `komo compute list` and looking in the `queue_arns` section. Enter the **last part** (don't include the prefix) of the queue related to this instance. In this example, that would be `komodo-my-cluster-p4-24xl-queue`
-    </Accordion>
-
-    <Accordion title="Kubernetes">
-      Create a Kubernetes backend as follows:
-
-      ```bash
-      komo backend create -t kubernetes -n my-cluster
-      ```
-
-      It will prompt you to enter some of the information you got from the previous step.
-
-      Next, create a resource for each machine type you want to use:
-
-      ```bash
-      komo backend add-resource -b my-cluster -n gpu-large
-      ```
-
-      It will prompt you to enter the hardware requirements for this resource (ie. how many cpus/gpus/mem you want).
-      It will prompt you to (optionally) enter an instance type. If entered, this will set the `node.kubernetes.io/instance-type` key of the pod capabilities accordingly for jobs/machines you create with this resource.
+          This will prompt you to enter some of the information that you gathered above.
+        </Accordion>
     </Accordion>
   </Step>
   <Step title="Initialize a Komodo project in your repository">
