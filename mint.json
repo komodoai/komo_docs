@@ -68,15 +68,6 @@
           ]
         },
         {
-          "group": "compute",
-          "pages": [
-            "komo-cli-reference/command/compute/create",
-            "komo-cli-reference/command/compute/add-aws-instance",
-            "komo-cli-reference/command/compute/list",
-            "komo-cli-reference/command/compute/terminate"
-          ]
-        },
-        {
           "group": "machine",
           "pages": [
             "komo-cli-reference/command/machine/create",
