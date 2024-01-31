@@ -37,7 +37,9 @@ Komodo AI can run your jobs on various backends. The choice of backend is yours 
         <Note>You can specify whatever name you want using the `-n` flag.</Note>
     </Accordion>
     <Accordion title="AWS">
-        Simply just run:
+        Before creating this backend, make sure you have the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) installed.
+
+        Then, simply just run:
 
         ```bash
         komo backend create -t aws -n aws
@@ -145,15 +147,16 @@ Komodo AI can run your jobs on various backends. The choice of backend is yours 
         </Accordion>
     </Accordion>
   </Step>
-  <Step title="Initialize a Komodo project in your repository">
+  <Step title="(Optional) Initialize a Komodo project in your repository">
     Initialize a new Komodo project by running the following command inside your project directory:
     
     ```bash
     komo init project
     ```
     
-    This will create a template project configuration in  `.komo/project.yaml`. This will set up
-    different configurations for the different backends you created earlier.
+    This will create a template project configuration in  `komoproj.yaml`. This lets you set up different
+    configuration for your jobs/machines.
+
     Edit this file to fit your needs.
 
     <Tip>You should be able to use this without any changes, as long as you have a requirements.txt file in your

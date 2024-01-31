@@ -28,7 +28,6 @@ komo run echo "Hello World"
 Run a python training job on your `aws` backend using resource `g4-24xl`. We use `--` to separate
 the arguments to the CLI from the arguments to your script.
 
-<Note>This assumes you have created a backend named `aws` and a resource named `g4-24xl` for that backend</Note>
 ```bash
 komo run -b aws -r g4-24xl -- python train.py --epochs 100
 ```

@@ -4,9 +4,6 @@ title: Jobs
 
 # Running Jobs
 
-To run a job, the first thing you need to do is make sure that you have
-[created a project config file](./komo-cli-reference/command/init/project) in `.komo/project.yaml`.
-
 There are 2 different ways to launch jobs; either with the `komo run` command or with the `komo do` command.
 Both options are described below.
 
@@ -14,11 +11,6 @@ Both options are described below.
 You can use the [`komo run`](./komo-cli-reference/command/run) command to start a job.
 For example, you could run a python script on your local machine with the following command:
 
-<Note>
-This assumes the following:
-1. You have a `train.py` script in your project directory.
-2. You created a backend named `local`.
-</Note>
 <Info>
 We use `--` to separate args to the CLI from args to your script.
 </Info>
@@ -29,12 +21,6 @@ komo run -b local -- python train.py --model llm_small
 After running that job on your local machine, you might want to then migrate to the cloud so you
 access more powerful machines. You can do so like this:
 
-<Note>
-This assumes the following:
-1. You have a `train.py` script in your project directory.
-2. You created a backend named `aws`.
-3. You created a resource named `p4-24xl` for your `aws` backend.
-</Note>
 ```bash
 komo run -b aws -r p4-24xl -- python train.py --model llm_large
 ```

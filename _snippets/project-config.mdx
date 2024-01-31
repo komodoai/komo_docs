@@ -1,97 +1,46 @@
-<Note>Each key in the `configs` section in the project config must correspond to the name of a backend you previously created.</Note>
-
 ```yaml
 kind: project
 
-configs:
 
-  # Config for backend 'aws'
-  aws:
-    # (Optional) Set this to the docker image that you want to use. If a requirements.txt is provided 
-    # in your project directory, those requirements will be installed into this image.
-    image: "nvcr.io/nvidia/pytorch:23.12-py3"
+# Optional docker image. If not provided, the default Komodo image will be used, and if
+# you have a requirements.txt in your project directory, those requirements will be installed
+# into the image
+# image: my-image:latest
 
-    workdir: "/app"
-  
-    # This is the directory that will be copied into your docker image before running it.
-    # Specifying '.' as shown below will use the current project directory.
-    # This means that every time you run a job, all of the files you have in your project directory
-    # (doesn't matter if they're committed with git or not) will be copied into your docker image
-    # before starting the job.
-    workspace: .
-  
-    # Set the environment variables you want to use here.
-    env:
-      test_var: "test_value"
+# The directory inside the image where your command will run.
+workdir: "/app"
 
-    # List of mounts, which are objects containing the keys "source", "target", and "type".
-    # "source" is the source path of the mount
-    # "target" is the mount point inside your docker container
-    # "type" is one of ["bind", "volume", "device"]
-    mounts: []
+# This is the directory that will be copied into your docker image workdir before running it.
+# Specifying '.' as shown below will use the current project directory.
+# This means that every time you run a job, all of the files you have in your project directory
+# (doesn't matter if they're committed with git or not) will be copied into your docker image
+# before starting the job.
+workspace: .
 
-    # This is the default resource that will be used for this backend if no resource is specified
-    # TODO: fill this in with the desired resource
-    default_resource: p4d-24xl
+# Set the environment variables you want to use here.
+env:
+  test_var: "test_value"
 
-  # Config for backend 'kubernetes'
-  kubernetes:
-    # (Optional) Set this to the docker image that you want to use. If a requirements.txt is provided 
-    # in your project directory, those requirements will be installed into this image.
-    image: "nvcr.io/nvidia/pytorch:23.12-py3"
-  
-    # TODO: Set this to the directory inside your image where your command will run.
-    workdir: "/app"
-  
-    # This is the directory that will be copied into your docker image before running it.
-    # Specifying '.' as shown below will use the current project directory.
-    # This means that every time you run a job, all of the files you have in your project directory
-    # (doesn't matter if they're committed with git or not) will be copied into your docker image
-    # before starting the job.
-    workspace: .
-  
-    # TODO: Set the environment variables you want to use here.
-    env:
-      test_var: "test_value"
+# These are optional mounts you can specify. Like docker mounts, you can specify mounts of type
+# 'bind', 'volume', or 'device'. Since Komodo manages your cloud infrastructure for you, you
+# generally will only need to set this for local backends. In other words, you probably only want
+# to use this in the 'overrides' section in this config file, for a local backend.
+# Each mount is an object with 3 keys: 'type', 'source', and 'target'. For example, a bind mount
+# would look like:
+#
+# mounts:
+#  - type: "bind"
+#    source: "/my/source/directory"
+#    target: "/my/target/directory"
+mounts: []
 
-    # List of mounts, which are objects containing the keys "source", "target", and "type".
-    # "source" is the source path of the mount
-    # "target" is the mount point inside your docker container
-    # "type" is one of ["bind", "volume", "device"]
-    mounts: []
-
-    # This is the default resource that will be used for this backend if no resource is specified
-    # TODO: fill this in with the desired resource
-    default_resource: v100x8
-
-  # Config for backend 'local'
-  local:
-    # (Optional) Set this to the docker image that you want to use. If a requirements.txt is provided 
-    # in your project directory, those requirements will be installed into this image.
-    image: "nvcr.io/nvidia/pytorch:23.12-py3"
-
-    workdir: "/app"
-
-    # This is the directory that will be copied into your docker image before running it.
-    # This isn't needed for the local backend, because you can mount in any directory you
-    # want, instead of copying it into the docker image.
-    workspace: null
-
-    # Set the environment variables you want to use here.
-    env:
-      test_var: "test_value"
-
-    # List of mounts, which are objects containing the keys "source", "target", and "type".
-    # "source" is the source path of the mount
-    # "target" is the mount point inside your docker container
-    # "type" is one of ["bind", "volume", "device"]
-    mounts:
-      # mount the current project directory into /app
-      - source: .
-        target: /app
-        type: bind
-
-# The default backend to use if the --backend flag isn't specified
-# TODO: Change this to whichever backend you choose
-default_backend: "aws"
+# This is where you can override any of the above config items for specific backends.
+# For example, you might want to add environment variables that only apply
+# to a specific backend. You could do so like this:
+#
+# overrides:
+#   my-backend:
+#     env:
+#       my_var: "some_value"
+overrides: {}
 ```
