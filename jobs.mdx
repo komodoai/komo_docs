@@ -4,30 +4,20 @@ title: Jobs
 
 # Running Jobs
 
-There are 2 different ways to launch jobs; either with the `komo run` command or with the `komo do` command.
-Both options are described below.
-
-## komo run
 You can use the [`komo run`](./komo-cli-reference/command/run) command to start a job.
-For example, you could run a python script on your local machine with the following command:
+
+For example, you could start a training job with 4 A10G GPUs like so:
 
 <Info>
 We use `--` to separate args to the CLI from args to your script.
 </Info>
 ```bash
-komo run -b local -- python train.py --model llm_small
-```
-
-After running that job on your local machine, you might want to then migrate to the cloud so you
-access more powerful machines. You can do so like this:
-
-```bash
-komo run -b aws -r p4-24xl -- python train.py --model llm_large
+komo run --cloud aws --gpus A10G:4 -- python train.py --epochs 100
 ```
 
 ### Distributed training
 
-You can scale up jobs across multiple nodes using the `-n` flag. For distributed jobs,
+You can scale up jobs across multiple nodes using the `--num-nodes` flag. For distributed jobs,
 the following environment variables are set for you to use in your application code:
 
 `NNODES`: The number of nodes launched for the job
@@ -36,65 +26,17 @@ the following environment variables are set for you to use in your application c
 
 `NUM_GPUS`: The number of GPUs on each machine
 
-`NODE_0_IP_ADDRESS`: The IP address of the first node (used as the 'master' node to coordinate distributed operations)
+`NODE_IP_ADDRESSES`: A comma-separated list of IP addresses of all the nodes
+
+`NODE_0_IP_ADDRESS`: The IP address of the master node (same as the first IP address in $NODE_IP_ADDRESSES). Provided for convenience for PyTorch applications
 
 For example, you might use these environment variables with torchrun as follows:
 
 ```bash
-komo run -b aws -r g4-24xl -n 4 -- torchrun train.py --nnodes \$NNODES --rdzv-endpoint \$NODE_0_IP_ADDRESS --rdzv-backend c10d --nproc-per-node \$NUM_GPUS train.py --epochs 100
+komo run --cloud aws --gpus A100:8 --num-nodes 4 -- torchrun train.py --nnodes \$NNODES --rdzv-endpoint \$NODE_0_IP_ADDRESS --rdzv-backend c10d --nproc-per-node \$NUM_GPUS train.py --epochs 100
 ```
 
-Notice that by using these environment variables, you can easily change the value of `-n` and `-r` without needing to update the command you're runnning.
-
-## komo do
-As an alternative to the `komo run` command, you can also run a job by
-[creating a task file](./komo-cli-reference/command/init/task), and then
-executing it using the [`komo do`](./komo-cli-reference/command/do) command
-(komo-do...get it?).
-
-For example, if we wanted to run the same 4-node job as above, our task file
-would look like this:
-
-```yaml
-kind: job
-
-backend: aws
-resource: p4-24xl
-
-command: [
-  "torchrun",
-  "train.py",
-  "--nnodes",
-  "$NNODES",
-  "--rdzv-endpoint",
-  "$NODE_0_IP_ADDRESS",
-  "--rdzv-backend",
-  "c10d",
-  "--nproc-per-node",
-  "$NUM_GPUS",
-  "train.py",
-  "--epochs",
-  "100"
-]
-
-num_nodes: 4
-
-# Here is where you can override any of the config variables in the section of your
-# project config file corresponding to the backend you're using. For example, if you
-# wanted to use a different image, you could do so like this:
-# 
-# config:
-#   image: my_image:latest
-# 
-# This is the same as the '--config' option in the 'komo run' command.
-config: {}
-```
-
-And then you could start the job like this:
-
-```bash
-komo do -f .komo/my-task-file.yaml
-```
+Notice that by using these environment variables, you can easily change the value of `--num-nodes` and `--gpus` without needing to update the command you're runnning.
 
 # Get the logs for jobs
 
@@ -103,6 +45,8 @@ You can get the logs for a job by running:
 ```bash
 komo logs my-job-id
 ```
+
+<Tip>Use the `--watch` flag to wait for new logs as they come in</Tip>
 
 See the [reference](./komo-cli-reference/command/logs) for more information on this command.
 

@@ -1,46 +1,46 @@
 ```yaml
-kind: project
+# Optional docker image to be used as the base environment
+# docker_image: my-image:latest
 
+# Optional dockerfile. docker_image and dockerfile are mututally exclusive - you can only set
+# one of them. If dockerfile is provided, it will be used to build the docker image before
+# the job starts. The build context will be the workdir, and the path to the dockerfile must
+# be relative to the workdir.
+# dockerfile: Dockerfile
 
-# Optional docker image. If not provided, the default Komodo image will be used, and if
-# you have a requirements.txt in your project directory, those requirements will be installed
-# into the image
-# image: my-image:latest
+# Default cloud to use for this project. This can be overridden with the --cloud flag
+cloud: aws
 
-# The directory inside the image where your command will run.
-workdir: "/app"
+# Default resources to use for this project.
+resources:
+  # This can be overridden with the --gpus flag
+  gpus: T4:1
+
+# Define storage options that can either be cloud-specific, or apply to all clouds
+storage:
+  all: {}
+  aws:
+    - type: s3
+      source: my-s3-dataset-bucket
+      target: /dataset
+      mode: COPY
+    - type: s3
+      source: my-s3-output-bucket
+      target: /output
+      mode: MOUNT
 
 # This is the directory that will be copied into your docker image workdir before running it.
 # Specifying '.' as shown below will use the current project directory.
 # This means that every time you run a job, all of the files you have in your project directory
 # (doesn't matter if they're committed with git or not) will be copied into your docker image
 # before starting the job.
-workspace: .
+workdir: .
 
 # Set the environment variables you want to use here.
 env:
   test_var: "test_value"
 
-# These are optional mounts you can specify. Like docker mounts, you can specify mounts of type
-# 'bind', 'volume', or 'device'. Since Komodo manages your cloud infrastructure for you, you
-# generally will only need to set this for local backends. In other words, you probably only want
-# to use this in the 'overrides' section in this config file, for a local backend.
-# Each mount is an object with 3 keys: 'type', 'source', and 'target'. For example, a bind mount
-# would look like:
-#
-# mounts:
-#  - type: "bind"
-#    source: "/my/source/directory"
-#    target: "/my/target/directory"
-mounts: []
+setup: |
+  pip install -r requirements.txt
 
-# This is where you can override any of the above config items for specific backends.
-# For example, you might want to add environment variables that only apply
-# to a specific backend. You could do so like this:
-#
-# overrides:
-#   my-backend:
-#     env:
-#       my_var: "some_value"
-overrides: {}
 ```

@@ -12,33 +12,25 @@ Create a Komodo machine on the backend and resource of your choice.
 
 | Option                              	| Description                                                                                                                                                       	| Type 	|
 |-------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------	|------	|
-| &#x2011;b, &#x2011;&#x2011;backend  	| Name of the backend to use.<br />Defaults to the default backend specified in your project config.                                                                  	| Text 	|
-| &#x2011;r, &#x2011;&#x2011;resource 	| Name of the resource to use.<br />Defaults to the default resource specified in your project config.                                                                	| Text 	|
-| &#x2011;d, &#x2011;&#x2011;detach   	| Exit after the machine is created instead of opening a shell into the machine                                                                                                       	|      	|
-| &#x2011;c, &#x2011;&#x2011;config   	| Override any parameters in the section of your project config for the specified backend.<br />Values must be provided as a comma-separated list of key=value pairs. 	| Text 	|
+| &#x2011;c, &#x2011;&#x2011;cloud  	| Name of the cloud to use. If not provided, Komodo will select a cloud for you based on GPU prices and availability.                                                                  	| Text 	|
+| &#x2011;g, &#x2011;&#x2011;gpus 	| Which gpus to use, in the format \<GPU type\>:\<Num GPUs\> (eg. A100:4)                                                                	| Text 	|
+| &#x2011;d, &#x2011;&#x2011;detach   	| Exit after the job is started instead of entering a shell            
 
 
 ### Examples
 
-Create a machine named `dev` on your default backend and resource
+Create a machine named `dev` using the default cloud/resources provided in your project config file.
 ```bash
 komo machine create dev
 ```
 
-Create a machine named `dev` on your `aws` backend using resource `g4`
+Create a machine named `dev` on AWS with a single T4 GPU
 
-<Note>This assumes you have created a backend named `aws` and a resource named `g4` for that backend</Note>
 ```bash
-komo machine create -b aws -r g4 dev
+komo machine create --cloud aws --gpus T4:1 dev
 ```
 
-Create the same machine as above, this time overriding the `workdir` specified in your
-project config for backend `aws`
-```bash
-komo machine create -b aws -r g4 -c workdir=/app dev
-```
-
-Create a machine named `dev` on your default backend and resource, but don't open a shell into it.
+Create a machine named `dev` using the default cloud/resources provided in your project config file, but don't open a shell into it.
 ```bash
 komo machine create -d dev
 ```

@@ -16,128 +16,15 @@ Komodo AI can run your jobs on various backends. The choice of backend is yours 
     komo register
     ```
   </Step>
-  <Step title="Setup your backend">
-    First, make sure you have [Docker](https://docs.docker.com/engine/install/) installed.
-    
-    Next, follow the instructions for the type of backend you'd like to create:
-    <Accordion title="Local">
-        Simply just run:
-
-        ```bash
-        komo backend create -t local -n local
-        ```
-
-        <Note>You can specify whatever name you want using the `-n` flag.</Note>
-    </Accordion>
+  <Step title="Connect your cloud account">
     <Accordion title="AWS">
-        Before creating this backend, make sure you have the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) installed.
+        First, make sure you have the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) installed.
 
         Then, simply just run:
 
         ```bash
-        komo backend create -t aws -n aws
+        komo aws connect
         ```
-
-        This will prompt you to enter the region to create this backend in, along with
-        some information about which instance types you want to use.
-
-        <Note>You can specify whatever name you want using the `-n` flag. For example, if you are creating multiple AWS backends in different
-        regions, you might name one `aws-us-east-1`. Or if you're only creating one AWS backend, you could just name it `aws`.</Note>
-    </Accordion>
-    <Accordion title="Kubernetes">
-        <Note>We don't recommend using Kubernetes if you need support for autoscaling AND multi-node distributed training.
-        This is because we use [Volcano](https://volcano.sh/en/) as our gang scheduler for multi-node jobs, which doesn't
-        work well with autoscalers.</Note>
-
-        <Tip>
-            If you need help with the steps below, reach out to someone on the Platform
-            team in your organization or let us know and we'll be happy to work with you
-            to get this set up!
-        </Tip>
-
-        Follow these steps to get your Kubernetes cluster ready for Komodo:
-
-        
-
-        <Accordion title="Install Volcano" icon="volcano">
-            Komodo uses [Volcano](https://volcano.sh/en/) to schedule workloads on your Kubernetes cluster.
-
-            Install Volcano by following the appropriate instructions in the [Volcano README](https://github.com/volcano-sh/volcano#readme).
-        </Accordion>
-
-        <Accordion title="Create Komodo Resources" icon="dragon">
-            Komodo uses isolated resources to schedule workloads on your cluster. In this section we will configure these resources.
-
-            **Create Komodo Cluster Role**
-
-            ```bash
-            kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/cluster-role.yaml
-            ```
-
-            **Create Komodo Service Account**
-
-            ```bash
-            kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/service-account.yaml
-            ```
-
-            **Link the Komodo Service Account to the Komodo Cluster Role**
-
-            ```bash
-            kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/cluster-role-binding.yaml
-            ```
-
-            **Create a Komodo Service Account Token**
-
-            ```bash
-            kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_cli/main/komodo_cli/terraform/komodo_manifests/files/service-account-token.yaml
-            ```
-        </Accordion>
-        <Accordion title="Obtain and store cluster details" icon="gear">
-            To prepare for the next step, you'll need to obtain the URL of your Kubernetes cluster API server and a token to communicate with the cluster.
-
-            <Note>
-            This token belongs to the Service Account we created in the Kubernetes cluster
-            configuration step.
-            </Note>
-
-            First set the `CLUSTER_NAME` environment variable to the name of your cluster.
-
-            <Accordion title="How to get cluster name?">
-            Try `kubectl config view | grep -m 1 "name" | awk '{ print $2 }'` command or ask your platform engineer.
-            </Accordion>
-
-            ```bash
-            export CLUSTER_NAME="my-cluster-name"
-            ```
-
-            ##### **host**
-
-            The value for `host` can be obtained in the following way
-
-            ```bash
-            kubectl cluster-info $CLUSTER_NAME | grep "control plane" | awk '{ print $NF }'
-            ```
-
-            ##### **bearer_token**
-
-            The value for the `bearer_token` can be obtained using the following steps.
-
-            ```bash
-            echo "Obtaining the Service Account token for cluster $CLUSTER_NAME"
-            echo ""
-            TOKEN=$(kubectl get secret komodo-runner-secret --namespace default -o jsonpath='{.data.token}' | base64 -d)
-            echo "$TOKEN"
-            ```
-        </Accordion>
-        <Accordion title="Create the backend">
-          Simply just run:
-
-          ```bash
-          komo backend create -t kubernetes -n my-cluster
-          ```
-
-          This will prompt you to enter some of the information that you gathered above.
-        </Accordion>
     </Accordion>
   </Step>
   <Step title="(Optional) Initialize a Komodo project in your repository">
@@ -151,15 +38,12 @@ Komodo AI can run your jobs on various backends. The choice of backend is yours 
     configuration for your jobs/machines.
 
     Edit this file to fit your needs.
-
-    <Tip>You should be able to use this without any changes, as long as you have a requirements.txt file in your
-    project directory that has all the requirements needed to run your code.</Tip>
   </Step>
   <Step title="Run Your First Komodo Job">
     You are now ready to run your first job! 
     
     ```bash
-    komo run -b aws -r p4-24xl echo "Hello World!"
+    komo run --cloud aws --gpus A100:1 echo "Hello World!"
     ```
     
     [Find full details on this command here.](./komo-cli-reference/command/run)

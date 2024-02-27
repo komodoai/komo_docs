@@ -10,18 +10,11 @@ VSCode, where you can edit files and test out your changes as you please.
 
 # Starting a machine
 
-You can start a machine on your local machine like this:
-
-```bash
-# this will create a machine named 'dev'
-komo machine create -b local dev
-```
-
-Similarly, you can create a machine on a cloud backend like this:
+You can create a machine on a cloud provider like this:
 
 ```bash
 # this will create a machine named 'cloud-dev'
-komo machine create -b aws -r gpu-large cloud-dev
+komo machine create --cloud aws --gpus T4:1 cloud-dev
 ```
 
 See the [reference](./komo-cli-reference/command/machine/create) for more information on this command.
@@ -35,8 +28,6 @@ komo machine shell dev
 ```
 
 You can also open a VSCode window into a machine like this:
-
-<Info>This feature currently is only supported by the Local backend, but support for other types of backends is coming soon!</Info>
 
 ```bash
 komo machine vscode dev

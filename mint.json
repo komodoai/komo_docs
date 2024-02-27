@@ -40,7 +40,6 @@
         "komo-cli-reference/command/list",
         "komo-cli-reference/command/logs",
         "komo-cli-reference/command/shell",
-        "komo-cli-reference/command/do",
         "komo-cli-reference/command/register",
         {
           "group": "api-key",
@@ -55,16 +54,6 @@
           "pages": [
             "komo-cli-reference/command/init/project",
             "komo-cli-reference/command/init/task"
-          ]
-        },
-        {
-          "group": "backend",
-          "pages": [
-            "komo-cli-reference/command/backend/create",
-            "komo-cli-reference/command/backend/list",
-            "komo-cli-reference/command/backend/delete",
-            "komo-cli-reference/command/backend/add-resource",
-            "komo-cli-reference/command/backend/delete-resource"
           ]
         },
         {
