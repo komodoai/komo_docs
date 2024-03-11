@@ -42,25 +42,17 @@
         "komo-cli-reference/command/shell",
         "komo-cli-reference/command/register",
         {
-          "group": "api-key",
-          "pages": [
-            "komo-cli-reference/command/api-key/create",
-            "komo-cli-reference/command/api-key/list",
-            "komo-cli-reference/command/api-key/delete"
-          ]
-        },
-        {
           "group": "init",
           "pages": [
             "komo-cli-reference/command/init/project",
-            "komo-cli-reference/command/init/task"
+            "komo-cli-reference/command/init/job"
           ]
         },
         {
           "group": "machine",
           "pages": [
             "komo-cli-reference/command/machine/create",
-            "komo-cli-reference/command/machine/shell",
+            "komo-cli-reference/command/machine/ssh",
             "komo-cli-reference/command/machine/vscode",
             "komo-cli-reference/command/machine/list",
             "komo-cli-reference/command/machine/terminate"

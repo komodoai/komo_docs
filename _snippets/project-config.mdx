@@ -1,46 +1,39 @@
 ```yaml
-# Optional docker image to be used as the base environment
-# docker_image: my-image:latest
-
-# Optional dockerfile. docker_image and dockerfile are mututally exclusive - you can only set
-# one of them. If dockerfile is provided, it will be used to build the docker image before
-# the job starts. The build context will be the workdir, and the path to the dockerfile must
-# be relative to the workdir.
-# dockerfile: Dockerfile
-
-# Default cloud to use for this project. This can be overridden with the --cloud flag
 cloud: aws
 
-# Default resources to use for this project.
-resources:
-  # This can be overridden with the --gpus flag
-  gpus: T4:1
-
-# Define storage options that can either be cloud-specific, or apply to all clouds
-storage:
-  all: {}
-  aws:
-    - type: s3
-      source: my-s3-dataset-bucket
-      target: /dataset
-      mode: COPY
-    - type: s3
-      source: my-s3-output-bucket
-      target: /output
-      mode: MOUNT
-
-# This is the directory that will be copied into your docker image workdir before running it.
+# This is the directory that will be uploaded to the remote machine.
 # Specifying '.' as shown below will use the current project directory.
 # This means that every time you run a job, all of the files you have in your project directory
-# (doesn't matter if they're committed with git or not) will be copied into your docker image
-# before starting the job.
+# (doesn't matter if they're committed with git or not) will be uploaded to the remote machine
 workdir: .
 
 # Set the environment variables you want to use here.
 env:
-  test_var: "test_value"
+  my_var: "my_value"
 
 setup: |
   pip install -r requirements.txt
 
+# Optionally add input/output storage
+# Currently, only S3 buckets are supported
+# storage:
+#   /dataset:
+#     source: s3://my-dataset
+#     # the bucket contents will be copied into /dataset during setup
+#     # files you write here will NOT be uploaded back to s3
+#     mode: COPY
+#   /output:
+#     source: s3://my-output-bucket
+#     # the bucket will be mounted onto /output
+#     # files you write here will be uploaded back to s3
+#     mode: MOUNT
+
+# Optional docker image to be used as the base environment
+# Setup and run commands will be run inside this docker environment
+# docker_image: my-image:latest
+
+# Optionally define resources for all jobs using this project config
+# You can also define gpus on the fly using the --gpus CLI flag
+# resources:
+#   gpus: T4:1
 ```

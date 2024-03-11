@@ -11,7 +11,7 @@ Get the logs for a given job.
 
 | Option                              	| Description                                                                                                                                                                                             | Type |
 |-------------------------------------	|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----- |
-| &#x2011;w, &#x2011;&#x2011;watch      | If this option is specified, this command will continuously output new log entries until the job finishes. Otherwise, this command will output the current logs and then exit.  |      |
+| &#x2011;w, &#x2011;&#x2011;follow      | If this option is specified, this command will continuously output new log entries until the job finishes. Otherwise, this command will output the current logs and then exit.  |      |
 | &#x2011;i, &#x2011;&#x2011;node-index | The index of the node to get logs from. Defaults to 0.                                                                                                                                                  | Int  |
 
 
@@ -29,5 +29,5 @@ komo logs -i 1 abcdef123456
 
 Get the logs for job `abcdef123456` and keep outputting logs from the job as they're generated until the job finishes
 ```bash
-komo logs -w abcdef123456
+komo logs -f abcdef123456
 ```

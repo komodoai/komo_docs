@@ -32,6 +32,7 @@ komo run --cloud aws --gpus A10G:4 -- python train.py --epochs 100
 ```
 
 Run the same job, but distributed over 4 nodes using torchrun.
+For more information about distributed training, see [this page](../../jobs)
 ```bash
 komo run --cloud aws --gpus A10G:4 -n 4 -- torchrun train.py --nnodes \$NNODES --rdzv-endpoint \$NODE_0_IP_ADDRESS --rdzv-backend c10d --nproc-per-node \$NUM_GPUS train.py --epochs 100
 ```

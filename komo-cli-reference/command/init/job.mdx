@@ -1,21 +1,22 @@
 ---
-title: delete
+title: task
 ---
-
-Delete an API key.
+Initialize a new Komodo job file for the current project.
 
 ### Usage
 
-`komo api-key delete [OPTIONS] API_KEY`
+`komo init task [OPTIONS]`
 
 ### Options
 
 | Option                              	| Description                                                                                    | Type |
 |-------------------------------------	|----------------------------------------------------------------------------------------------- |----- |
+| &#x2011;n, &#x2011;&#x2011;name  	| The name of job task to create. Required.   | Text 	|
+
 
 ### Examples
 
-Delete API key `123456abcdef`
+<Note>This will create a template job configuration in  `my-job.yaml`. You can then edit this file according to your needs.</Note>
 ```bash
-komo api-key delete 123456abcdef
+komo init job -n my-job
 ```
