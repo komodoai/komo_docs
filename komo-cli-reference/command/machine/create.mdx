@@ -2,7 +2,7 @@
 title: create
 ---
 
-Create a Komodo machine on the backend and resource of your choice.
+Create a Komodo machine with whatever resources you need.
 
 ### Usage
 
@@ -14,7 +14,7 @@ Create a Komodo machine on the backend and resource of your choice.
 |-------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------	|------	|
 | &#x2011;c, &#x2011;&#x2011;cloud  	| Name of the cloud to use. If not provided, Komodo will select a cloud for you based on GPU prices and availability.                                                                  	| Text 	|
 | &#x2011;g, &#x2011;&#x2011;gpus 	| Which gpus to use, in the format \<GPU type\>:\<Num GPUs\> (eg. A100:4)                                                                	| Text 	|
-| &#x2011;d, &#x2011;&#x2011;detach   	| Exit after the job is started instead of entering a shell            
+| &#x2011;d, &#x2011;&#x2011;detach   	| Do not wait for the machine to start up.            
 
 
 ### Examples
@@ -30,7 +30,7 @@ Create a machine named `dev` on AWS with a single T4 GPU
 komo machine create --cloud aws --gpus T4:1 dev
 ```
 
-Create a machine named `dev` using the default cloud/resources provided in your project config file, but don't open a shell into it.
+Create a machine named `dev` using the default cloud/resources provided in your project config file, but don't wait for it to start up.
 ```bash
 komo machine create -d dev
 ```
