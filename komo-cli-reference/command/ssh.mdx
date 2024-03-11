@@ -1,11 +1,11 @@
 ---
-title: shell
+title: ssh
 ---
-Open a shell into a running job.
+SSH into a running job.
 
 ### Usage
 
-`komo shell [OPTIONS] JOB_ID`
+`komo ssh [OPTIONS] JOB_ID`
 
 ### Options
 
@@ -15,12 +15,12 @@ Open a shell into a running job.
 
 ### Examples
 
-Open a shell into job `abcdef123456`
+SSH into job `abcdef123456`
 ```bash
-komo shell abcdef123456
+komo ssh abcdef123456
 ```
 
-Open a shell into the second node of job `abcdef123456`
+SSH into the second node of job `abcdef123456`
 ```bash
-komo shell -i 1 abcdef123456
+komo ssh -i 1 abcdef123456
 ```

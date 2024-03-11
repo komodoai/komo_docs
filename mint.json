@@ -39,7 +39,7 @@
         "komo-cli-reference/command/describe",
         "komo-cli-reference/command/list",
         "komo-cli-reference/command/logs",
-        "komo-cli-reference/command/shell",
+        "komo-cli-reference/command/ssh",
         "komo-cli-reference/command/register",
         {
           "group": "init",
