@@ -29,7 +29,8 @@
         "introduction",
         "getting-started",
         "jobs",
-        "machines"
+        "machines",
+        "how-to-guides"
       ]
     },
     {
@@ -57,6 +58,15 @@
             "komo-cli-reference/command/machine/list",
             "komo-cli-reference/command/machine/terminate"
           ]
+        }
+      ]
+    },
+    {
+      "group": "How-to Guides",
+      "pages": [
+        {
+          "group": "Connecting your clouds",
+          "pages": ["how-to-guides/connecting-clouds/GCP"]
         }
       ]
     }
