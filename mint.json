@@ -13,65 +13,87 @@
   },
   "topbarLinks": [
     {
-      "name": "Home",
-      "url": "introduction"
+      "name": "Developer Guide",
+      "url": "developer-guide"
+    },
+    {
+      "name": "Reference",
+      "url": "reference"
+    },
+    {
+      "name": "Tutorials",
+      "url": "tutorials"
     }
   ],
-  "topbarCtaButton": {
-    "name": "Get Started",
-    "url": "getting-started"
-  },
   "anchors": [],
   "navigation": [
     {
-      "group": "Home",
+      "group": "Developer Guide",
       "pages": [
-        "introduction",
-        "getting-started",
-        "jobs",
-        "machines",
-        "how-to-guides"
+        "komodoai",
+        "quickstart",
+        {
+          "group": "Jobs",
+          "pages": ["jobs/overview"]
+        },
+        {
+          "group": "Machines",
+          "pages": ["machines/overview"]
+        },
+        {
+          "group": "Services",
+          "pages": ["services/overview"]
+        }
       ]
     },
     {
-      "group": "Komo CLI Reference",
+      "group": "Reference",
       "pages": [
-        "komo-cli-reference/command/run",
-        "komo-cli-reference/command/describe",
-        "komo-cli-reference/command/list",
-        "komo-cli-reference/command/logs",
-        "komo-cli-reference/command/ssh",
-        "komo-cli-reference/command/register",
+        "references/reference",
         {
-          "group": "init",
+          "group": "Command Line Interface",
           "pages": [
-            "komo-cli-reference/command/init/project",
-            "komo-cli-reference/command/init/job"
-          ]
-        },
-        {
-          "group": "machine",
-          "pages": [
-            "komo-cli-reference/command/machine/create",
-            "komo-cli-reference/command/machine/ssh",
-            "komo-cli-reference/command/machine/vscode",
-            "komo-cli-reference/command/machine/list",
-            "komo-cli-reference/command/machine/terminate"
+            "references/komo-cli-reference/overview",
+            "references/komo-cli-reference/command/run",
+            "references/komo-cli-reference/command/describe",
+            "references/komo-cli-reference/command/list",
+            "references/komo-cli-reference/command/logs",
+            "references/komo-cli-reference/command/ssh",
+            "references/komo-cli-reference/command/register",
+            {
+              "group": "init",
+              "pages": [
+                "references/komo-cli-reference/command/init/project",
+                "references/komo-cli-reference/command/init/job"
+              ]
+            },
+            {
+              "group": "machine",
+              "pages": [
+                "references/komo-cli-reference/command/machine/create",
+                "references/komo-cli-reference/command/machine/ssh",
+                "references/komo-cli-reference/command/machine/vscode",
+                "references/komo-cli-reference/command/machine/list",
+                "references/komo-cli-reference/command/machine/terminate"
+              ]
+            }
           ]
         }
       ]
     },
     {
-      "group": "How-to Guides",
+      "group": "Tutorials",
       "pages": [
+        "tutorials/tutorials",
         {
           "group": "Connecting your clouds",
-          "pages": ["how-to-guides/connecting-clouds/GCP"]
+          "pages": ["tutorials/connecting-clouds/GCP"]
         }
       ]
     }
   ],
   "footerSocials": {
-    "github": "https://github.com/komodoai"
+    "github": "https://github.com/komodoai",
+    "discord": "https://discord.gg/CqwSCYQnPe"
   }
 }
