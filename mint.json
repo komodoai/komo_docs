@@ -32,7 +32,6 @@
       "pages": [
         "komodoai",
         "quickstart",
-        "supportedclouds",
         {
           "group": "Jobs",
           "pages": ["jobs/overview"]
@@ -84,11 +83,18 @@
     },
     {
       "group": "Tutorials",
+      "pages": ["tutorials/tutorials"]
+    },
+    {
+      "group": "Cloud Accounts aka The Sky",
       "pages": [
-        "tutorials/tutorials",
+        "supportedclouds",
         {
           "group": "Connecting your clouds",
-          "pages": ["tutorials/connecting-clouds/GCP"]
+          "pages": [
+            "tutorials/connecting-clouds/overview",
+            "tutorials/connecting-clouds/GCP"
+          ]
         }
       ]
     }
