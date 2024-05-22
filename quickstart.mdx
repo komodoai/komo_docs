@@ -47,7 +47,7 @@ resources:
 
 env:
   # set the environment variable my-env-var to my-value
-  my-env-var: my-value
+  MY_ENV_VAR: my-value
 
 # Copy the contents of the current directory onto the remote machine
 workdir: .
@@ -64,11 +64,12 @@ run: |
 ```
 
 This defines a job that does the following:
-* Launches an AWS instance with 1 A10G GPU
-* Sets an environment variable
-* Copies the current directory to the remote instance
-* Executes the setup operations inside the remote workdir
-* Executes the run operations inside the remote workdir
+
+- Launches an AWS instance with 1 A10G GPU
+- Sets an environment variable
+- Copies the current directory to the remote instance
+- Executes the setup operations inside the remote workdir
+- Executes the run operations inside the remote workdir
 
 To launch this job, simply run:
 
