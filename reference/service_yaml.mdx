@@ -8,12 +8,12 @@ By adding an additional `service` section to your task YAML you can convert it t
 Available fields:
 
 ```yaml
-# The `service` section turns a skypilot task yaml into a service yaml.
+# The `service` section turns a Komodo task yaml into a service yaml.
 service:
 
-  # Readiness probe (required). Used by SkyServe to check if your service
+  # Readiness probe (required). Used by Komodo Load Balancer to check if your service
   # replicas are ready for accepting traffic. If the readiness probe returns
-  # a 200, SkyServe will start routing traffic to that replica.
+  # a 200, Komodo Load Balancer will start routing traffic to that replica.
   readiness_probe:
     # Path to probe (required).
     path: /v1/models
@@ -33,24 +33,24 @@ service:
 
   # One of the two following fields (replica_policy or replicas) is required.
 
-  # Replica autoscaling policy. This describes how SkyServe autoscales
+  # Replica autoscaling policy. This describes how Komodo Load Balancer autoscales
   # your service based on the QPS (queries per second) of your service.
   replica_policy:
     # Minimum number of replicas (required).
     min_replicas: 1
-    # Maximum number of replicas (optional). If not specified, SkyServe will
+    # Maximum number of replicas (optional). If not specified, Komodo Load Balancer will
     # use a fixed number of replicas (the same as min_replicas) and ignore
     # any QPS threshold specified below.
     max_replicas: 3
     # Following specs describe the autoscaling policy.
-    # Target query per second per replica (optional). SkyServe will scale your
+    # Target query per second per replica (optional). Komodo Load Balancer will scale your
     # service so that, ultimately, each replica manages approximately
     # target_qps_per_replica queries per second. **Autoscaling will only be
     # enabled if this value is specified.**
     target_qps_per_replica: 5
     # Upscale and downscale delay in seconds (optional). Defaults to 300 seconds
     # (5 minutes) and 1200 seconds (20 minutes) respectively. To avoid aggressive
-    # autoscaling, SkyServe will only upscale or downscale your service if the
+    # autoscaling, Komodo Load Balancer will only upscale or downscale your service if the
     # QPS of your service is higher or lower than the target QPS for a period
     # of time. This period of time is controlled by upscale_delay_seconds and
     # downscale_delay_seconds. The default values should work in most cases.
@@ -64,13 +64,13 @@ service:
 
 ##### Fields below describe each replica #####
 
-# Besides the `service` section, the rest is a regular SkyPilot task YAML.
+# Besides the `service` section, the rest is a regular Komodo task YAML.
 
 resources:
   # Port to run your service on each replica (required). This port will be
-  # automatically exposed to the public internet by SkyServe.
+  # automatically exposed to the public internet by Komodo Load Balancer.
   ports: 8080
   # Other resources config...
 
-# Other fields of your SkyPilot task YAML...
+# Other fields of your Komodo task YAML...
 ```
