@@ -92,7 +92,7 @@
     },
     {
       "group": "Tutorials",
-      "pages": ["tutorials/tutorials"]
+      "pages": ["tutorials/tutorials", "tutorials/llama3"]
     },
     {
       "group": "Cloud Accounts aka The Sky",
