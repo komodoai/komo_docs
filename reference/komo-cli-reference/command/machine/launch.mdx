@@ -1,0 +1,39 @@
+---
+title: launch
+---
+
+Launch a Komodo machine with whatever resources you need.
+
+### Usage
+
+`komo machine launch [OPTIONS] NAME`
+
+### Options
+
+| Option                            | Required | Description                                                                                                         | Type |
+| --------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------- | ---- |
+| &#x2011;&#x2011;name              | No       | Job name. If not provided, a name will be generated.                                                                | str  |
+| &#x2011;c, &#x2011;&#x2011;cloud  | No       | Name of the cloud to use. If not provided, Komodo will select a cloud for you based on GPU prices and availability. | str  |
+| &#x2011;g, &#x2011;&#x2011;gpus   | No       | Which gpus to use, in the format \<GPU type\>:\<Num GPUs\> (eg. A100:4)                                             | str  |
+| &#x2011;d, &#x2011;&#x2011;detach | No       | Do not wait for the machine to start up.                                                                            | flag |
+| &#x2011;&#x2011;notebook          | No       | Launch a Jupyter Notebook on the machine.                                                                           | flag |
+
+### Examples
+
+Launch a machine named `dev` using the default cloud/resources provided in your project config file.
+
+```bash
+komo machine launch dev
+```
+
+Create a machine named `dev` on AWS with a single T4 GPU
+
+```bash
+komo machine launch --cloud aws --gpus T4:1 dev
+```
+
+Create a machine named `dev` using the default cloud/resources provided in your project config file, but don't wait for it to start up.
+
+```bash
+komo machine launch -d dev
+```

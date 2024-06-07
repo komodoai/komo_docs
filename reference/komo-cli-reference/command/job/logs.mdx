@@ -1,0 +1,36 @@
+---
+title: logs
+---
+
+Get the logs for a given job.
+
+### Usage
+
+`komo job logs [OPTIONS] JOB_ID`
+
+### Options
+
+| Option                                | Description                                                                                                                                                                    | Type |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---- |
+| &#x2011;w, &#x2011;&#x2011;follow     | If this option is specified, this command will continuously output new log entries until the job finishes. Otherwise, this command will output the current logs and then exit. | flag |
+| &#x2011;i, &#x2011;&#x2011;node-index | The index of the node to get logs from. Defaults to 0.                                                                                                                         | int  |
+
+### Examples
+
+Get the logs for job `abcdef123456`
+
+```bash
+komo job logs abcdef123456
+```
+
+Get the logs for the second node of job `abcdef123456`
+
+```bash
+komo job logs -i 1 abcdef123456
+```
+
+Get the logs for job `abcdef123456` and keep outputting logs from the job as they're generated until the job finishes
+
+```bash
+komo job logs -f abcdef123456
+```

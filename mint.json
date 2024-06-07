@@ -50,31 +50,40 @@
       "group": "Reference",
       "pages": [
         "reference/reference",
+        "reference/task_yaml",
+        "reference/service_yaml",
         {
           "group": "Command Line Interface",
           "pages": [
             "reference/komo-cli-reference/overview",
-            "reference/komo-cli-reference/command/run",
-            "reference/komo-cli-reference/command/describe",
-            "reference/komo-cli-reference/command/list",
-            "reference/komo-cli-reference/command/logs",
-            "reference/komo-cli-reference/command/ssh",
-            "reference/komo-cli-reference/command/register",
             {
-              "group": "init",
+              "group": "job",
               "pages": [
-                "reference/komo-cli-reference/command/init/project",
-                "reference/komo-cli-reference/command/init/job"
+                "reference/komo-cli-reference/command/job/launch",
+                "reference/komo-cli-reference/command/job/list",
+                "reference/komo-cli-reference/command/job/logs",
+                "reference/komo-cli-reference/command/job/ssh",
+                "reference/komo-cli-reference/command/job/terminate"
               ]
             },
             {
               "group": "machine",
               "pages": [
-                "reference/komo-cli-reference/command/machine/create",
+                "reference/komo-cli-reference/command/machine/launch",
+                "reference/komo-cli-reference/command/machine/list",
+                "reference/komo-cli-reference/command/machine/notebook",
+                "reference/komo-cli-reference/command/machine/setup-logs",
                 "reference/komo-cli-reference/command/machine/ssh",
                 "reference/komo-cli-reference/command/machine/vscode",
-                "reference/komo-cli-reference/command/machine/list",
                 "reference/komo-cli-reference/command/machine/terminate"
+              ]
+            },
+            {
+              "group": "service",
+              "pages": [
+                "reference/komo-cli-reference/command/service/launch",
+                "reference/komo-cli-reference/command/service/list",
+                "reference/komo-cli-reference/command/service/terminate"
               ]
             }
           ]
