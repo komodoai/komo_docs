@@ -1,0 +1,53 @@
+---
+title: launch
+---
+
+Launch a Komodo job.
+
+### Usage
+
+`komo job launch [OPTIONS] CONFIG_FILE`
+
+### Options
+
+| Option                               | Required | Description                                                                                                         | Type |
+| ------------------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------- | ---- |
+| &#x2011;&#x2011;name                 | No       | Job name. If not provided, a name will be generated.                                                                | str  |
+| &#x2011;c, &#x2011;&#x2011;cloud     | No       | Name of the cloud to use. If not provided, Komodo will select a cloud for you based on GPU prices and availability. | str  |
+| &#x2011;g, &#x2011;&#x2011;gpus      | No       | Which gpus to use, in the format \<GPU type\>:\<Num GPUs\> (eg. A100:4)                                             | str  |
+| &#x2011;n, &#x2011;&#x2011;num-nodes | No       | The number of nodes to launch for this job (for multi-node distributed training)                                    | int  |
+| &#x2011;d, &#x2011;&#x2011;detach    | No       | Exit after the job is started instead of following the logs                                                         | flag |
+| &#x2011;r, &#x2011;&#x2011;run       | No       | Command to run when the job starts                                                                                  | str  |
+
+### Examples
+
+Run the hello world job described in the [quickstart](../../../../quickstart)
+
+```bash
+komo job launch hello-world.yaml
+```
+
+Run the same job, but this time specify a different command to run
+
+```bash
+komo job launch hello-world.yaml --run 'echo goodbye world'
+```
+
+Run a training job distributed over 4 nodes.
+Your job will have access to the following environment variables:
+
+`SKYPILOT_NODE_RANK`: rank (an integer ID from 0 to num_nodes-1) of the node executing the task
+
+`SKYPILOT_NODE_IPS`: a string of IP addresses of the nodes reserved to execute the task, where each line contains one IP address
+
+`SKYPILOT_NUM_GPUS_PER_NODE`: number of GPUs reserved on each node to execute the task; the same as the count in accelerators: \<name\>:\<count\> 
+
+```bash
+komo job launch my-training-job.yaml --num-nodes 4
+```
+
+Run a job and exit as soon as the job has started
+
+```bash
+komo job launch hello-world.yaml -d
+```

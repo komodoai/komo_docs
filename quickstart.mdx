@@ -1,0 +1,80 @@
+---
+title: "Quickstart"
+---
+
+Create an account, connect your cloud account, and start running your workflows in minutes.
+
+### 1. Create an account and connect your cloud
+
+Before you get started, make sure to create an account and connect your cloud account(s).
+
+1. [Sign up](https://app.komodoai.dev) for a free account at [app.komodoai.dev](https://app.komodoai.dev) and log in.
+2. Connect a cloud provider on the [Settings](https://app.komodoai.dev/settings) page.
+
+<img src="images/settings-cloud-connect-beacon.png" />
+
+### 2. Install Komodo CLI and authenticate
+
+Install the CLI:
+
+```bash
+pip install komo
+```
+
+Head to the [Settings](https://app.komodoai.dev/settings) page and copy your API key.
+
+<img height="400" src="images/settings-api-key.png" />
+
+Now login and provide your API key when prompted:
+
+```bash
+komo login
+```
+
+### 3. Hello World!
+
+Let's define our very first job, a simple Hello World! program.
+
+Copy the following YAML into a `hello.yaml` file:
+
+```yaml
+# Replace this with the cloud that you connected earlier
+cloud: aws
+
+resources:
+  # 1x A10G GPU
+  accelerators: A10G:1
+
+env:
+  # set the environment variable MY_ENV_VAR to my-value
+  MY_ENV_VAR: my-value
+
+# Copy the contents of the current directory onto the remote machine
+workdir: .
+
+# Typical use: pip install -r requirements.txt
+# Invoked under the workdir (ie. can use its files)
+setup: |
+  echo "Running setup operations"
+
+# Typical use: run your actual job - eg. python train.py
+# Invoked under the workdir (ie. can use its files)
+run: |
+  echo "Hello World!"
+```
+
+This defines a job that does the following:
+
+- Launches an AWS instance with 1 A10G GPU
+- Sets an environment variable
+- Copies the current directory to the remote instance
+- Executes the setup operations inside the remote workdir
+- Executes the run operations inside the remote workdir
+
+To launch this job, simply run:
+
+```bash
+komo job launch hello.yaml
+```
+
+And that's it! The logs from the job will be streamed by the CLI in real-time, and you can also access them from the [web dashboard](https://app.komodoai.dev). Once the job finishes, the remote instance will be terminated.

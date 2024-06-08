@@ -1,0 +1,116 @@
+---
+title: Running Llama3 with vLLM
+---
+
+This tutorial will guide you through running Llama3 on **your infrastructure** with vLLM using Komodo AI. Follow these steps to configure and deploy Llama3 effectively.
+
+### Prerequisites
+
+Before starting, ensure you have:
+
+- Komodo AI CLI installed.
+- Access to a Komodo AI account.
+- Your cloud accounts connected to Komodo AI.
+
+If you haven't done these steps, follow our [Quickstart Guide](../quickstart) to do so.
+
+### Step 1: Create the Service Configuration File
+
+Create a configuration file for the Llama3 service. Below is a sample `service-llama3-aws.yaml` file. If you want to run your service on Lambda Cloud, change the `cloud` field to `lambda`.
+
+In the configuration file, replace `<REPLACE_WITH_YOUR_HUGGINGFACE_TOKEN>` with your [HuggingFace token](https://huggingface.co/docs/hub/en/security-tokens) so that model weights are downloaded.
+
+```yaml
+envs:
+  MODEL_NAME: meta-llama/Meta-Llama-3-8B-Instruct
+  HF_TOKEN: <REPLACE_WITH_YOUR_HUGGINGFACE_TOKEN>
+
+service:
+  replica_policy:
+    min_replicas: 1
+    max_replicas: 1
+    target_qps_per_replica: 5
+
+  # An actual request for readiness probe.
+  readiness_probe:
+    initial_delay_seconds: 1800
+    path: /v1/chat/completions
+    post_data:
+      model: meta-llama/Meta-Llama-3-8B-Instruct
+      messages:
+        - role: user
+          content: Hello! What is your name?
+      max_tokens: 1
+
+resources:
+  cloud: aws
+  gpus: A10G:1
+  cpus: 8
+  disk_size: 512 # Ensure model checkpoints can fit.
+  ports: [8000] # Expose to internet traffic.
+
+setup: |
+  conda activate vllm
+  if [ $? -ne 0 ]; then
+    conda create -n vllm python=3.10 -y
+    conda activate vllm
+  fi
+
+  pip install vllm==0.4.2
+  # Install Gradio for web UI.
+  pip install gradio openai
+  pip install flash-attn==2.5.9.post1
+
+run: |
+  conda activate vllm
+  echo 'Starting vllm api server...'
+
+  # https://github.com/vllm-project/vllm/issues/3098
+  export PATH=$PATH:/sbin
+
+  # NOTE: --gpu-memory-utilization 0.95 needed for 4-GPU nodes.
+  python -u -m vllm.entrypoints.openai.api_server \
+    --port 8000 \
+    --model $MODEL_NAME \
+    --trust-remote-code --tensor-parallel-size $SKYPILOT_NUM_GPUS_PER_NODE \
+    --gpu-memory-utilization 0.95 \
+    --max-num-seqs 64
+```
+
+### Step 2: Launch the Llama3 Service
+
+With your configuration file ready, launch the Llama3 service using the Komodo AI CLI:
+
+```bash
+komo service launch --name my-llama service-llama3-aws.yaml
+```
+
+This command will:
+
+- Use the `service-llama3-aws.yaml` configuration file.
+- Create and deploy the Llama3 service named `my-llama` on your infrastructure.
+
+The CLI command will loop until the service starts, but you can `Ctrl-C` out of it at any time.
+
+At this point you can run `komo service list` to check on the service status and get the service URL once it is ready.
+
+Alternatively, head to our [web dashboard](https://app.komodoai.dev) to view more about the service such as replica logs and autoscaling details.
+
+### Step 3: Chat with Llama3
+
+Once the service status is `RUNNING`, access your Llama3 service via the URL provided by the Komodo AI web dashboard or the CLI.
+
+```bash
+curl -L '<YOUR_SERVICE_URL>/v1/chat/completions' \
+     --header 'Content-Type: application/json' \
+     --data '{
+       "model": "meta-llama/Meta-Llama-3-8B-Instruct",
+       "messages": [
+         {
+           "role": "user",
+           "content": "Who are you?"
+         }
+       ],
+       "max_tokens": 100
+     }'
+```

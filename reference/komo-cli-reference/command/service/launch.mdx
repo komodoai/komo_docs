@@ -1,0 +1,58 @@
+---
+title: launch
+---
+
+Launch a Komodo Service.
+
+### Usage
+
+`komo service launch [OPTIONS] CONFIG_FILE`
+
+### Options
+
+| Option                            | Required | Description                                                                                                         | Type |
+| --------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------- | ---- |
+| &#x2011;&#x2011;name              | No       | Service name. If not provided, a name will be generated.                                                            | str  |
+| &#x2011;c, &#x2011;&#x2011;cloud  | No       | Name of the cloud to use. If not provided, Komodo will select a cloud for you based on GPU prices and availability. | str  |
+| &#x2011;g, &#x2011;&#x2011;gpus   | No       | Which gpus to use, in the format \<GPU type\>:\<Num GPUs\> (eg. A100:4)                                             | str  |
+| &#x2011;d, &#x2011;&#x2011;detach | No       | Exit after the service is started instead of following the logs                                                     | flag |
+
+### Examples
+
+Launch a simple HTTP service on AWS using a config file.
+
+```yaml
+service:
+  readiness_probe:
+    path: /
+    initial_delay_seconds: 30
+
+  replica_policy:
+    min_replicas: 1
+    max_replicas: 5
+    target_qps_per_replica: 10
+    upscale_delay_seconds: 60
+    downscale_delay_seconds: 60
+
+resources:
+  cloud: aws
+  ports: [8989]
+
+workdir: .
+
+envs:
+  test_var: "test_value"
+
+setup: |
+  echo "Running setup operations"
+
+run: |
+  echo 'Running!'
+  python -m http.server 8989
+```
+
+And then run
+
+```bash
+komo service launch --name simple-http service-simple-aws.yaml
+```

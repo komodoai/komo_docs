@@ -1,0 +1,30 @@
+---
+title: list
+---
+
+List all of your jobs.
+
+### Usage
+
+`komo job list [OPTIONS]`
+
+### Options
+
+| Option                           | Description                                                                                  | Type |
+| -------------------------------- | -------------------------------------------------------------------------------------------- | ---- |
+| &#x2011;l, &#x2011;&#x2011;limit | The limit to the number of jobs that are listed. Defaults to 10. Use -1 to display all jobs. | int  |
+| &#x2011;s, &#x2011;&#x2011;skip  | The number of jobs to skip                                                                   | int  |
+
+### Examples
+
+List your jobs
+
+```bash
+komo job list
+```
+
+List 5 jobs, but skip the first 3 that would normally be displayed
+
+```bash
+komo job list -l 5 -s 3
+```
