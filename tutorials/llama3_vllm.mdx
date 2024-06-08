@@ -74,21 +74,7 @@ run: |
     --model $MODEL_NAME \
     --trust-remote-code --tensor-parallel-size $SKYPILOT_NUM_GPUS_PER_NODE \
     --gpu-memory-utilization 0.95 \
-    --max-num-seqs 64 \
-    2>&1 | tee api_server.log &
-
-  while ! `cat api_server.log | grep -q 'Uvicorn running on'`; do
-    echo 'Waiting for vllm api server to start...'
-    sleep 5
-  done
-
-  echo 'Starting gradio server...'
-  git clone https://github.com/vllm-project/vllm.git || true
-  python vllm/examples/gradio_openai_chatbot_webserver.py \
-    -m $MODEL_NAME \
-    --port 8001 \
-    --model-url http://localhost:8001/v1/chat/completions \
-    --stop-token-ids 128009,128001
+    --max-num-seqs 64
 ```
 
 ### Step 2: Launch the Llama3 Service
@@ -115,7 +101,7 @@ Alternatively, head to our [web dashboard](https://app.komodoai.dev) to view mor
 Once the service status is `RUNNING`, access your Llama3 service via the URL provided by the Komodo AI web dashboard or the CLI.
 
 ```bash
-curl --location '<YOUR_SERVICE_URL>/v1/chat/completions' \
+curl -L '<YOUR_SERVICE_URL>/v1/chat/completions' \
      --header 'Content-Type: application/json' \
      --data '{
        "model": "meta-llama/Meta-Llama-3-8B-Instruct",

@@ -21,28 +21,33 @@ Launch a Komodo job.
 
 ### Examples
 
-Run a simple hello world job, using the cloud/resources provided in the project config file.
+Run the hello world job described in the [quickstart](../../../../quickstart)
 
 ```bash
-komo job launch echo "Hello World"
+komo job launch hello-world.yaml
 ```
 
-Run a python training job on AWS using 4 A10G GPUs. We use `--` to separate
-the arguments to the CLI from the arguments to your script.
+Run the same job, but this time specify a different command to run
 
 ```bash
-komo job launch --cloud aws --gpus A10G:4 -- python train.py --epochs 100
+komo job launch hello-world.yaml --run 'echo goodbye world'
 ```
 
-Run the same job, but distributed over 4 nodes using torchrun.
-For more information about distributed training, see [this page](../../jobs)
+Run a training job distributed over 4 nodes.
+Your job will have access to the following environment variables:
+
+`SKYPILOT_NODE_RANK`: rank (an integer ID from 0 to num_nodes-1) of the node executing the task
+
+`SKYPILOT_NODE_IPS`: a string of IP addresses of the nodes reserved to execute the task, where each line contains one IP address
+
+`SKYPILOT_NUM_GPUS_PER_NODE`: number of GPUs reserved on each node to execute the task; the same as the count in accelerators: \<name\>:\<count\> 
 
 ```bash
-komo job launch --cloud aws --gpus A10G:4 -n 4 -- torchrun train.py --nnodes \$NNODES --rdzv-endpoint \$NODE_0_IP_ADDRESS --rdzv-backend c10d --nproc-per-node \$NUM_GPUS train.py --epochs 100
+komo job launch my-training-job.yaml --num-nodes 4
 ```
 
 Run a job and exit as soon as the job has started
 
 ```bash
-komo job launch -d -- python train.py --epochs 100
+komo job launch hello-world.yaml -d
 ```

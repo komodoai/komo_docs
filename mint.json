@@ -33,12 +33,12 @@
         "komodoai",
         "quickstart",
         {
-          "group": "Jobs",
-          "pages": ["jobs/overview"]
-        },
-        {
           "group": "Machines",
           "pages": ["machines/overview"]
+        },
+        {
+          "group": "Jobs",
+          "pages": ["jobs/overview"]
         },
         {
           "group": "Services",

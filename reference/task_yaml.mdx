@@ -83,6 +83,7 @@ resources:
 
   # Whether the cluster should use spot instances (optional).
   # If unspecified, defaults to False (on-demand instances).
+  # NOTE: spot instances are not currently supported, this must be set to False
   use_spot: False
 
   # Disk size in GB to allocate for OS (mounted at /). Increase this if you
@@ -119,6 +120,8 @@ resources:
   #     ports:
   #       - 8080
   #       - 10022-10040
+  # NOTE: On Lambda Labs, you must expose ports through the
+  # firewall settings page (https://cloud.lambdalabs.com/firewall).
   ports: 8081
 
   # Additional accelerator metadata (optional); only used for TPU node
@@ -150,7 +153,7 @@ resources:
   #
   # Docker support
   # You can specify docker image to use by setting the image_id to
-  # `docker:<image name>` for Azure, AWS and GCP. For example,
+  # `docker:<image name>`, and is only supported on Azure, AWS and GCP. For example,
   #   image_id: docker:ubuntu:latest
   # Currently, only debian and ubuntu images are supported.
   # If you want to use a docker image in a private registry, you can specify your
@@ -226,45 +229,20 @@ resources:
 #
 # For more information about docker support in Komodo, please refer to the `image_id` section above.
 envs:
-  MY_BUCKET: temp-gcs-test
+  MY_BUCKET: s3://my-s3-bucket
   MY_LOCAL_PATH: tmp-workdir
   MODEL_SIZE: 13b
 
 file_mounts:
-  # Uses rsync to sync local files/directories to all nodes of the cluster.
-  #
-  # If a relative path is used, it's evaluated relative to the location from
-  # which `komo <CMD> launch` is called.
-  #
-  # If symlinks are present, they are copied as symlinks, and their targets
-  # must also be synced using file_mounts to ensure correctness.
-  /remote/dir1/file: /local/dir1/file
-  /remote/dir2: /local/dir2
-
-  # Create a S3 bucket named my-sample-dataset, uploads the contents of
-  # /local/path/datasets to the bucket, and marks the bucket as persistent
-  # (it will not be deleted after the completion of this task).
-  # Symlinks and their contents are NOT copied.
-  #
-  # Mounts the bucket at /datasets-storage on every node of the cluster.
+  # Mounts an S3 bucket at /datasets-storage
   /datasets-storage:
-    name: my-sample-dataset # Name of storage, optional when source is bucket URI
-    source: /local/path/datasets # Source path, can be local or s3/gcs URL. Optional, do not specify to create an empty bucket.
-    store: s3 # Could be either 's3', 'gcs' or 'r2'; default: None. Optional.
-    persistent: True # Defaults to True; can be set to false to delete bucket after cluster is downed. Optional.
+    source: s3://my-s3-bucket
     mode: MOUNT # Either MOUNT or COPY. Defaults to MOUNT. Optional.
-
-  # Copies a cloud object store URI to the cluster. Can be private buckets.
-  /datasets-s3: s3://my-awesome-dataset
-
-  /output:
-    source: s3://my-output-bucket
-    mode: MOUNT
 
   # Demoing env var usage.
   /checkpoint/${MODEL_SIZE}: ~/${MY_LOCAL_PATH}
   /mydir:
-    name: ${MY_BUCKET} # Name of the bucket.
+    source: ${MY_BUCKET} # Name of the bucket.
     mode: MOUNT
 
 # Setup script (optional) to execute on every `komo <CMD> launch`.

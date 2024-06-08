@@ -26,11 +26,6 @@ service:
     # based on your service's startup time.
     initial_delay_seconds: 1200
 
-  # Simplified version of readiness probe that only contains the readiness
-  # probe path. If you want to use GET method for readiness probe and the
-  # default initial delay, you can use the following syntax:
-  readiness_probe: /v1/models
-
   # One of the two following fields (replica_policy or replicas) is required.
 
   # Replica autoscaling policy. This describes how Komodo Load Balancer autoscales
@@ -58,9 +53,6 @@ service:
     # these values to a smaller number.
     upscale_delay_seconds: 300
     downscale_delay_seconds: 1200
-  # Simplified version of replica policy that uses a fixed number of
-  # replicas:
-  replicas: 2
 
 ##### Fields below describe each replica #####
 

@@ -43,10 +43,10 @@ cloud: aws
 
 resources:
   # 1x A10G GPU
-  gpus: A10G:1
+  accelerators: A10G:1
 
 env:
-  # set the environment variable my-env-var to my-value
+  # set the environment variable MY_ENV_VAR to my-value
   MY_ENV_VAR: my-value
 
 # Copy the contents of the current directory onto the remote machine

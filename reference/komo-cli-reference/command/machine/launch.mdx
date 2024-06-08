@@ -20,20 +20,20 @@ Launch a Komodo machine with whatever resources you need.
 
 ### Examples
 
-Launch a machine named `dev` using the default cloud/resources provided in your project config file.
+Launch a machine named `dev`
 
 ```bash
-komo machine launch dev
+komo machine launch my-machine.yaml --name dev
 ```
 
 Create a machine named `dev` on AWS with a single T4 GPU
 
 ```bash
-komo machine launch --cloud aws --gpus T4:1 dev
+komo machine launch my-machine.yaml --cloud aws --gpus T4:1 dev
 ```
 
-Create a machine named `dev` using the default cloud/resources provided in your project config file, but don't wait for it to start up.
+Create a machine named `dev`, but don't wait for it to start up.
 
 ```bash
-komo machine launch -d dev
+komo machine launch my-machine.yaml -d dev
 ```
