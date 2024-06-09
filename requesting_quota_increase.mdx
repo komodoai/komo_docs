@@ -1,0 +1,68 @@
+---
+title: Requesting Quota Increase
+---
+
+Cloud service providers implement quotas to limit the number of virtual machines (VMs) and other resources you can provision within a specific region. These quotas help balance resource allocation and ensure fair usage across all customers. However, when scaling applications or deploying new services, especially those requiring high-end GPUs like V100 or A100, you might encounter quota-related errors, such as QuotaExceeded or VcpuLimitExceeded.
+
+### Tips for Quota Management
+
+<Tip>
+  Plan Ahead: Anticipate your resource needs based on upcoming projects or
+  scaling plans to request quota increases in advance.
+</Tip>
+
+<Tip>
+  Monitor Usage: Regularly check your current quota usage to avoid unexpected
+  service disruptions.
+</Tip>
+
+<Tip>
+  Respond Promptly: Respond to any follow-up inquiries from the support team to
+  expedite the approval process and clarify your resource usage plans.
+</Tip>
+
+<AccordionGroup>
+  <Accordion title="AWS">
+    #### 1. Identify the Quotas That Need Increasing
+
+    1. **Navigate to the Service Quotas Console**
+
+    - Go to the [Service Quotas Console](https://console.aws.amazon.com/servicequotas/home/services/ec2/quotas).
+    - You can also find it by searching for "Service Quotas" in the AWS Management Console.
+
+    2. **Select the desired region** in the top right
+
+    3. **Choose an EC2 instance type** from the list
+
+    - Use the search bar to locate the specific AWS instance type quota (e.g. `All P5 Spot Instance Requests`, `
+    Running Dedicated g4ad Hosts`)
+
+    4. Select the quota
+
+    - Click the quota name
+
+    #### 2.Submit a Quota Increase Request
+
+    1. Click the **Request Quota Increase** button in the top right
+
+    2. **Specify New Quota Value**
+
+    - In **Increase quota value** field, enter the new value.
+
+    - If prompted, provide a detailed use case description explaining why you need the increase. Mention expected usage patterns, upcoming projects, or business requirements.
+
+    3. Submit the request by clicking **Request**
+
+    #### 3. Monitor Your Request
+
+    1. **Check Request Status**
+
+    - Go to the [Service Quotas Console](https://console.aws.amazon.com/servicequotas/home/services/ec2/quotas).
+    - Click on **Quota request history** to view the status of your quota increase requests.
+
+    2. **Wait for Approval**
+
+    - AWS may take some time to process your request. You will receive a notification once it’s approved or if further information is needed.
+    </Accordion>
+
+</AccordionGroup>

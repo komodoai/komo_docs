@@ -33,12 +33,12 @@
         "komodoai",
         "quickstart",
         {
-          "group": "Machines",
-          "pages": ["machines/overview"]
-        },
-        {
           "group": "Jobs",
           "pages": ["jobs/overview"]
+        },
+        {
+          "group": "Machines",
+          "pages": ["machines/overview"]
         },
         {
           "group": "Services",
@@ -98,6 +98,7 @@
       "group": "Cloud Accounts aka The Sky",
       "pages": [
         "supportedclouds",
+        "requesting_quota_increase",
         {
           "group": "Connecting your clouds",
           "pages": [
