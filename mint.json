@@ -34,7 +34,7 @@
         "quickstart",
         {
           "group": "Machines",
-          "pages": ["machines/overview", "machines/notebooks", "machines/connecting"]
+          "pages": ["machines/overview", "machines/first_machine", "machines/connecting"]
         },
         {
           "group": "Jobs",

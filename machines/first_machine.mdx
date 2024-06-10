@@ -1,8 +1,8 @@
 ---
-title: GPU-Backed Notebooks
+title: Launch Your First Machine
 ---
 
-Launching GPU-backed notebooks is a breeze with Komodo:
+Launching machines, including GPU-backed notebooks, is a breeze with Komodo:
 
 ### 1. Create your machine config file
 
@@ -25,7 +25,7 @@ workdir: .
 setup: |
   echo "Running setup operations"
 
-# Start a notebook on the machine
+# Start a notebook on the machine (this will use port 8888)
 notebook: true
 ```
 
@@ -45,6 +45,8 @@ start a notebook with the `--notebook` CLI flag:
 ```bash
 komo machine launch dev.yaml --notebook --name dev
 ```
+
+### 3. Open the notebook
 
 <Note>When interacting with machines using the CLI, you reference them using their **unique name** rather than their ID.</Note>
 
