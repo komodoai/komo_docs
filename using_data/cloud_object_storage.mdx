@@ -1,0 +1,40 @@
+---
+title: Cloud Object Storage
+---
+
+Komodo supports reading/writing to cloud object storage buckets on your machines/jobs/services.
+
+<Note>Currently, only S3 buckets are supported, however support for GCS and R2 is coming soon!</Note>
+
+There are 2 modes for using storage buckets:
+    1. COPY - copies the contents of the bucket to a specific location on the instance. This is helpful for datasets where you need fast read access. Any files written here will NOT be uploaded back to the bucket.
+    2. MOUNT - mounts the bucket as a file system on the instance. This is helpful for having a perisistent storage location, where you can store your model checkpoints and access them even after your tasks finish. Any files written here will be uploaded back to the bucket.
+
+Here is an example of what you'd need to include in your task config to effectively use cloud storage buckets:
+
+```yaml
+file_mounts:
+  # Copy the contents of an S3 bucket to /dataset
+  /dataset:
+    source: s3://my-dataset
+    mode: COPY
+
+  # Mount an S3 bucket to /output
+  # Any files written here (eg. model checkpoints) will be uploaded back
+  # to the S3 bucket
+  /output:
+    source: s3://my-output-bucket
+    mode: MOUNT
+```
+
+
+### Picking a storage mode
+
+<br />
+
+|                            | MOUNT                                                                                  | COPY |
+| -------------------------------- | -------------------------------------------------------------------------------------------- | ---- |
+| **Best For** | Writing task outputs (eg. checkpoints, logs), reading very large data that won't fit on disk. | High performance read-only access to datasets that fit on disk.  |
+| **Performance**  | Slow to read/write files. Fast to provision. | Fast file access. Slow at initial provisioning.  |
+| **Writing to buckets** | Most write operations are supported. | Not supported, read-only. |
+| **Disk Size** | No disk size requirements. | Disk size must be greater than the size of the bucket. |

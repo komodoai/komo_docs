@@ -14,15 +14,15 @@
   "topbarLinks": [
     {
       "name": "Developer Guide",
-      "url": "developer-guide"
+      "url": "komodoai"
     },
     {
       "name": "Reference",
-      "url": "reference"
+      "url": "reference/task_yaml"
     },
     {
       "name": "Tutorials",
-      "url": "tutorials"
+      "url": "tutorials/llama3_vllm"
     }
   ],
   "anchors": [],
@@ -43,6 +43,10 @@
         {
           "group": "Services",
           "pages": ["services/overview", "services/first_service"]
+        },
+        {
+          "group": "Using Data",
+          "pages": ["using_data/cloud_object_storage"]
         }
       ]
     },
@@ -95,7 +99,7 @@
     {
       "group": "Cloud Accounts",
       "pages": [
-        "supportedclouds",
+        "supported_clouds",
         "requesting_quota_increase",
         {
           "group": "Connecting your clouds",

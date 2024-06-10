@@ -24,10 +24,25 @@ workdir: .
 setup: |
   echo "Running setup operations"
 
+file_mounts:
+  # Copy the contents of an S3 bucket to /dataset
+  /dataset:
+    source: s3://my-dataset
+    mode: COPY
+
+  # Mount an S3 bucket to /output
+  # Any files written here (eg. model checkpoints) will be uploaded back
+  # to the S3 bucket
+  /output:
+    source: s3://my-output-bucket
+    mode: MOUNT
+
 # Typical use: python train.py
 # Invoked under the workdir (ie. can use its files)
+# This will save a file called nvidia-smi-output.txt in /output,
+# which will then get written back to the s3 bucket
 run: |
-  nvidia-smi
+  nvidia-smi > /output/nvidia-smi-output.txt
 ```
 
 ### 2. Launch the job

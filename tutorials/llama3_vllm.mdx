@@ -6,7 +6,7 @@ This tutorial will guide you through running Llama3 on **your infrastructure** w
 
 ### Step 1: Create the service config
 
-Create a configuration file for the Llama3 service. Below is a sample `service-llama3-aws.yaml` file.
+Create a configuration file for the Llama3 service. Below is a sample `service-llama3.yaml` file.
 
 In the configuration file, replace `<REPLACE_WITH_YOUR_HUGGINGFACE_TOKEN>` with your [HuggingFace token](https://huggingface.co/docs/hub/en/security-tokens) so that model weights are downloaded.
 You'll have to [request access](https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct) to LLama3 if you haven't already.
@@ -72,7 +72,7 @@ run: |
 With your configuration file ready, launch the Llama3 service using the CLI:
 
 ```bash
-komo service launch service-llama3-aws.yaml --name llama3-8b
+komo service launch service-llama3.yaml --name llama3-8b
 ```
 
 ### Step 3: Chat with Llama3
