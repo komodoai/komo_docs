@@ -1,0 +1,87 @@
+---
+title: Launch Your First Job
+---
+
+Let's define our very first job, a simple job that runs `nvidia-smi`.
+
+### 1. Define the job config
+
+Copy the following YAML into a `show-gpus.yaml` file:
+```yaml
+resources:
+  # 1x A10/A10G GPU
+  accelerators: {A10G:1, A10:1}
+
+env:
+  # set the environment variable MY_ENV_VAR to my-value
+  MY_ENV_VAR: my-value
+
+# Copy the contents of the current directory onto the remote machine
+workdir: .
+
+# Typical use: pip install -r requirements.txt
+# Invoked under the workdir (ie. can use its files)
+setup: |
+  echo "Running setup operations"
+
+# Typical use: python train.py
+# Invoked under the workdir (ie. can use its files)
+run: |
+  nvidia-smi
+```
+
+### 2. Launch the job
+
+To launch this job, simply run:
+
+```bash
+komo job launch show-gpus.yaml
+```
+
+You can also choose to give the job an optional name (if not set, Komodo will automatically generate a name):
+
+<Note>Names are not required to be unique across jobs. This requirement only exists for machines/services.</Note>
+
+```bash
+komo job launch show-gpus.yaml --name show-gpus
+```
+
+The logs will automatically be live streamed as the job runs. You can safely Ctrl-C after the job is submitted without the job being terminated.
+
+You can also launch the job and detach from the logs:
+
+```bash
+komo job launch show-gpus.yaml -d
+```
+
+### 3. Get the job logs
+
+You can see the logs for the job in the dashboard, or get them using the CLI:
+
+<Note>When interacting with jobs using the CLI, you reference them using their **unique ID**</Note>
+
+```bash
+komo job logs <job-id>
+```
+
+For jobs that are currently running, you can live stream the logs:
+
+```bash
+komo job logs --follow <job-id>
+```
+
+### 4. SSH into the job instance
+
+You can also SSH into the instance that the job is running on:
+
+```bash
+komo job ssh <job-id>
+```
+
+### 5. List all jobs
+
+You can list all the jobs you have launched by running:
+
+```bash
+komo job logs
+```

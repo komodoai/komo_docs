@@ -1,0 +1,56 @@
+---
+title: GPU-Backed Notebooks
+---
+
+Launching GPU-backed notebooks is a breeze with Komodo:
+
+### 1. Create your machine config file
+
+Copy the following YAML file to `dev.yaml` and modify it to your needs:
+
+```yaml
+resources:
+  # 1x A10/A10G GPU
+  accelerators: {A10G:1, A10:1}
+
+env:
+  # set the environment variable MY_ENV_VAR to my-value
+  MY_ENV_VAR: my-value
+
+# Copy the contents of the current directory onto the remote machine
+workdir: .
+
+# Typical use: pip install -r requirements.txt
+# Invoked under the workdir (ie. can use its files)
+setup: |
+  echo "Running setup operations"
+
+# Start a notebook on the machine
+notebook: true
+```
+
+### 2. Launch the machine
+
+Launch the machine by simply running:
+
+<Note>Machine names are required to be unique, because that is how you reference them with the CLI.</Note>
+
+```bash
+komo machine launch dev.yaml --name dev
+```
+
+You can also omit the `notebook` parameter in the config file, and instead
+start a notebook with the `--notebook` CLI flag:
+
+```bash
+komo machine launch dev.yaml --notebook --name dev
+```
+
+<Note>When interacting with machines using the CLI, you reference them using their **unique name** rather than their ID.</Note>
+
+And that's it! Once your machine is running, you will be able to open the notebook from the dashboard.
+You can also open the notebook from the CLI:
+
+```bash
+komo machine notebook dev
+```
