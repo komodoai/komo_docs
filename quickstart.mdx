@@ -132,7 +132,9 @@ workdir: .
 setup: |
   echo "Running setup operations"
 
-# Typical use: python train.py
+# Typical uses:
+#    torchserve ..
+#    python -u -m vllm.entrypoints.openai.api_server ...
 # Invoked under the workdir (ie. can use its files)
 run: |
   python -m http.server --port 8000
