@@ -2,15 +2,12 @@
 title: Overview
 ---
 
-Komodo jobs are tasks or workloads managed by Komodo AI, designed for executing AI and machine learning processes efficiently on the customer's infrastructure.
+Komodo jobs allow you to easily deploy your data processing/training/inferencing jobs onto self-terminating instances.
 
-#### Key Features:
+### Key Features
 
-- **Task Management**: Efficient handling of AI/ML tasks and workloads.
-- **Scalability**: Dynamically allocate resources to match the demands of the job.
-- **Automation**: Integrate with CI/CD pipelines to automate job execution and monitoring.
-- **Flexibility**: Support for various cloud providers and infrastructure setups.
-- **Collaboration**: Shared resources and job status tracking for team collaboration.
-- **Security**: Ensuring data privacy and secure execution of jobs on customer infrastructure.
-
-These features enable efficient and scalable execution of AI/ML tasks, reducing overhead and increasing productivity.
+- **Custom, Reproducable Environments**: Define your own custom environment with all the dependencies you need in a simple YAML file
+- **Serverless Execution**: Your jobs run in serverless style - when your job finishes, the instance is automatically terminated so that you only pay for the compute you use. Never worry about forgetting to run off instances ever again.
+- **Multi-Node Distributed Jobs**: Launch distributed jobs across multiple nodes by simply adding the `num_nodes` parameter to your job config.
+- **Automatic Git Access**: Simply add the public SSH key from the [settings page](https://app.komodoai.dev/settings) to your Github/Gitlab account, and all your jobs will have access to pull your private repos
+- **Best GPU Availability/Pricing**: Connect one or multiple cloud accounts and instantly get access to maximum GPU availability at the lowest prices. When you launch a job, Komodo will search all your cloud accounts for the cheapest available instances that meet your resource requirements.

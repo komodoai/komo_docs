@@ -2,15 +2,12 @@
 title: Overview
 ---
 
-Komodo machines are virtualized or containerized development environments provided by Komodo AI that run on the customer's infrastructure, designed for efficient AI development at scale.
+Komodo machines allow you to easily launch GPU-backed instances where you can do your development.
 
-#### Key Features:
+### Key Features
 
-- **Pre-configured Environments**: Includes popular AI/ML frameworks, languages, and tools.
-- **Scalability**: Easily scale resources up or down based on project needs.
-- **Flexibility**: Supports various cloud providers for preferred infrastructure choice.
-- **Collaboration**: Shared environments and version control integration.
-- **Automation**: Integrates with CI/CD pipelines for automated testing and deployment.
-- **Security**: Managed access controls and compliance with industry standards.
-
-These features streamline the AI development process, reduce setup time, and enhance productivity for AI engineers.
+- **Custom, Reproducable Environments**: Define your own custom environment with all the dependencies you need in a simple YAML file
+- **GPU-backed Notebooks**: Launch machines with Jupyter notebooks already running, and open them right from the dashboard
+- **VScode**: Easily open machines in VSCode with a single [CLI command](../reference/komo-cli-reference/command/machine/vscode)
+- **Automatic Git Access**: Simply add the public SSH key from the [settings page](https://app.komodoai.dev/settings) to your Github/Gitlab account, and all your machines will have access to pull your private repos
+- **Best GPU Availability/Pricing**: Connect one or multiple cloud accounts and instantly get access to maximum GPU availability at the lowest prices. When you launch a machine, Komodo will search all your cloud accounts for the cheapest available instances that meet your resource requirements.

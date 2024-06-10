@@ -34,24 +34,22 @@
         "quickstart",
         {
           "group": "Machines",
-          "pages": ["machines/overview"]
+          "pages": ["machines/overview", "machines/notebooks", "machines/connecting"]
         },
         {
           "group": "Jobs",
-          "pages": ["jobs/overview"]
+          "pages": ["jobs/overview", "jobs/first_job"]
         },
         {
           "group": "Services",
-          "pages": ["services/overview"]
+          "pages": ["services/overview", "services/first_service"]
         }
       ]
     },
     {
       "group": "Reference",
       "pages": [
-        "reference/reference",
         "reference/task_yaml",
-        "reference/service_yaml",
         {
           "group": "Command Line Interface",
           "pages": [
@@ -95,7 +93,7 @@
       "pages": ["tutorials/llama3_vllm"]
     },
     {
-      "group": "Cloud Accounts aka The Sky",
+      "group": "Cloud Accounts",
       "pages": [
         "supportedclouds",
         {
