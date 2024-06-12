@@ -34,7 +34,11 @@
         "quickstart",
         {
           "group": "Machines",
-          "pages": ["machines/overview", "machines/first_machine", "machines/connecting"]
+          "pages": [
+            "machines/overview",
+            "machines/first_machine",
+            "machines/connecting"
+          ]
         },
         {
           "group": "Jobs",
@@ -42,7 +46,11 @@
         },
         {
           "group": "Services",
-          "pages": ["services/overview", "services/first_service"]
+          "pages": [
+            "services/overview",
+            "services/first_service",
+            "services/autoscaling"
+          ]
         },
         {
           "group": "Using Data",
@@ -99,7 +107,7 @@
     {
       "group": "Cloud Accounts",
       "pages": [
-        "supported_clouds",
+        "supportedclouds",
         "requesting_quota_increase",
         {
           "group": "Connecting your clouds",

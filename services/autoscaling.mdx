@@ -1,0 +1,96 @@
+---
+title: Autoscaling
+---
+
+Komodo AI Services offer autoscaling capabilities directly integrated into our platform. This feature dynamically adjusts the number of service replicas based on the workload, ensuring optimal performance and resource utilization. With support for zero to N and back to zero scaling, you can automatically scale your services to meet demand while minimizing resource consumption during idle periods.
+
+This guide provides an overview of how to configure autoscaling using the `replica_policy` section in the service YAML file.
+
+## Configuration
+
+To enable autoscaling, configure the `replica_policy` section in your service configuration YAML file. Below is a detailed explanation of each parameter:
+
+### Parameters
+
+```yaml
+replica_policy:
+  min_replicas: 1
+  max_replicas: 3
+  target_qps_per_replica: 5
+  upscale_delay_seconds: 300
+  downscale_delay_seconds: 1200
+```
+
+**`min_replicas` (required)**
+
+- Sets the minimum number of replicas for your service.
+- This value is required and ensures that your service always has at least this many replicas running.
+- `min_replicas` can be set to `0` if you want your service to scale to zero.
+- Example: `min_replicas: 1`
+
+**`max_replicas` (required)**
+
+- Sets the maximum number of replicas for your service. If not specified, Komodo Load Balancer uses a fixed number of replicas equal to min_replicas, ignoring any QPS threshold specified.
+- Use this value to limit the maximum number of replicas that can be created.
+- Example: `max_replicas: 3`
+
+**`target_qps_per_replica` (optional)**
+- Specifies the target queries per second (QPS) each replica should handle. Komodo Load Balancer scales your service to ensure each replica handles approximately this number of QPS.
+- This helps distribute the load evenly across replicas and can be adjusted based on the expected workload.
+- Example: `target_qps_per_replica: 5`
+
+
+**`upscale_delay_seconds` (optional)**
+- Sets the delay in seconds before scaling up. This prevents the service from scaling up too aggressively by ensuring that the QPS is above the target for a sustained period.
+- Default: 300 seconds (5 minutes)
+- Adjust this value to control how quickly your service responds to increased load.
+- Example: `upscale_delay_seconds: 300`
+
+
+**`downscale_delay_seconds` (optional)**
+- Sets the delay in seconds before scaling down. This prevents the service from scaling down too aggressively by ensuring that the QPS is below the target for a sustained period.
+- Default: 1200 seconds (20 minutes)
+- Adjust this value to control how quickly your service reduces replicas when the load decreases.
+- Example: `downscale_delay_seconds: 1200`
+
+### Example Configuration
+
+```yaml
+service:
+  name: example-service
+  readingess_probe:
+    ...
+  replica_policy:
+    min_replicas: 1
+    max_replicas: 10
+    target_qps_per_replica: 5
+    upscale_delay_seconds: 300
+    downscale_delay_seconds: 1200
+```
+
+In this example:
+
+- The service will maintain at least 1 replica (`min_replicas: 1`).
+- It can scale up to a maximum of 10 replicas (`max_replicas: 10`).
+- Each replica will aim to handle around 5 QPS (`target_qps_per_replica: 5`).
+- The service will scale up after 5 minutes of sustained high load (`upscale_delay_seconds: 300`).
+- The service will scale down after 20 minutes of sustained low load (`downscale_delay_seconds: 1200`).
+
+### Zero to N and Back to Zero Scaling
+
+Komodo AI Services support both scaling up from zero replicas to meet demand and scaling back down to zero when the service is idle. This ensures efficient resource usage, especially for applications with intermittent or variable workloads.
+
+**Key Points:**
+- **Zero to N:** The platform will automatically create the necessary replicas to handle the incoming load based on your `target_qps_per_replica` and `max_replicas` settings.
+- **Back to Zero:** If the QPS drops and remains below the target for the duration specified in `downscale_delay_seconds`, the platform will gradually reduce the number of replicas down to zero, if appropriate.
+
+### Best Practices
+- **Set Reasonable Defaults:** Ensure that your `min_replicas` is set to a value that covers your base workload. Use `max_replicas` to prevent overprovisioning.
+- **Monitor and Adjust:** Regularly monitor your service performance and adjust `target_qps_per_replica`, `upscale_delay_seconds`, and `downscale_delay_seconds` based on actual usage patterns.
+- **Testing:** Test your autoscaling configuration in a staging environment to ensure it behaves as expected under different load conditions.
+
+### Conclusion
+
+Autoscaling in Komodo AI Services provides a flexible and efficient way to manage your service capacity. By configuring the `replica_policy` correctly, you can ensure your services are both responsive to demand and cost-effective.
+
+Feel free to reach out if you have any questions or need further assistance!
