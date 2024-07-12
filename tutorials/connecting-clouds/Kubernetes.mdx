@@ -4,27 +4,46 @@ title: Kubernetes
 
 This guide will walk you through the process of getting your Kubernetes cluster ready to be used on Komodo.
 
+### Supported Kubernetes deployments
+
+* Managed Kubernetes services (Amazon - EKS, Google Cloud - GKE)
+* On-prem clusters (Kubeadm, Rancher, RKE, K3s)
+
+<Tip>
+If you need help with anything below, please let us know on [Discord](https://discord.gg/baJGK6RKZC)! 😊
+</Tip>
+
 ### Prerequisites
 
-* Have a Kubernetes cluster with a publicly-accessible control plane endpoint
-* Make sure that each node in the cluster is assigned an external IP
-* Have a label on each node specifying the GPU type. Currently supported labels are:
-    * `nvidia.com/gpu.product`: automatically created by the Nvidia GPU operator
-    * `cloud.google.com/gke-accelerator`: used by GKE clusters
-    * `karpenter.k8s.aws/instance-gpu-name`: used by Karpenter
+* A Kubernetes cluster with a publicly-accessible control plane endpoint
+* Each cluster node assigned a public (external) IP
+* Each cluster node labeled with the GPU type.
 
-    <Tip>
-    To check if your nodes contain the required GPU labels, run:
-    ```bash
-    output=$(kubectl get nodes --show-labels | awk -F'[, ]' '{for (i=1; i<=NF; i++) if ($i ~ /nvidia.com\/gpu.product=|cloud.google.com\/gke-accelerator=|karpenter.k8s.aws\/instance-gpu-name=/) print $i}')
-    if [ -z "$output" ]; then
-    echo "No valid GPU labels found."
-    else
-    echo "GPU Labels found:"
-    echo "$output"
-    fi
-    ```
-    </Tip>
+<Tip>
+If your cluster has the NVIDIA GPU Operator installed or you are using GKE or Karpenter, your nodes already have the necessary GPU labels. No further action is required.
+</Tip>
+
+Currently supported GPU labels:
+* `nvidia.com/gpu.product`: automatically created by the Nvidia GPU operator
+* `cloud.google.com/gke-accelerator`: used by GKE clusters
+* `karpenter.k8s.aws/instance-gpu-name`: used by Karpenter
+
+<Tip>
+To check if your nodes contain the required GPU labels, run:
+```bash
+output=$(kubectl get nodes --show-labels | awk -F'[, ]' '{for (i=1; i<=NF; i++) if ($i ~ /nvidia.com\/gpu.product=|cloud.google.com\/gke-accelerator=|karpenter.k8s.aws\/instance-gpu-name=/) print $i}')
+if [ -z "$output" ]; then
+echo "No valid GPU labels found."
+else
+echo "GPU Labels found:"
+echo "$output"
+fi
+```
+</Tip>
+
+<Tip>
+Instructions for setting up NVIDIA GPU Operator on your cluster can be found [here](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html#install-nvidia-gpu-operator)
+</Tip>
 
 ### Step 1: Create the Komodo Service Account
 
