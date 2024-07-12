@@ -1,0 +1,201 @@
+---
+title: Kubernetes
+---
+
+This guide will walk you through the process of getting your Kubernetes cluster ready to be used on Komodo.
+
+### Prerequisites
+
+* Have a Kubernetes cluster with a publicly-accessible control plane endpoint
+* Make sure that each node in the cluster is assigned an external IP
+* Have a label on each node specifying the GPU type. Currently supported labels are:
+    * `nvidia.com/gpu.product`: automatically created by the Nvidia GPU operator
+    * `cloud.google.com/gke-accelerator`: used by GKE clusters
+    * `karpenter.k8s.aws/instance-gpu-name`: used by Karpenter
+
+    <Tip>
+    To check if your nodes contain the required GPU labels, run:
+    ```bash
+    output=$(kubectl get nodes --show-labels | awk -F'[, ]' '{for (i=1; i<=NF; i++) if ($i ~ /nvidia.com\/gpu.product=|cloud.google.com\/gke-accelerator=|karpenter.k8s.aws\/instance-gpu-name=/) print $i}')
+    if [ -z "$output" ]; then
+    echo "No valid GPU labels found."
+    else
+    echo "GPU Labels found:"
+    echo "$output"
+    fi
+    ```
+    </Tip>
+
+### Step 1: Create the Komodo Service Account
+
+Use the following YAML to create the service account that Komodo will use to launch your workflows on Kubernetes.
+
+```yaml
+# Create service account
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: komodo-sa 
+  namespace: default  # Change to your namespace if using a different one.
+  labels:
+    parent: skypilot
+---
+# Role for the service account
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: komodo-sa-role
+  namespace: default  # Change to your namespace if using a different one.
+  labels:
+    parent: skypilot
+rules:
+  - apiGroups: ["*"]  # Required for creating pods, services, secrets and other necessary resources in the namespace.
+    resources: ["*"]
+    verbs: ["*"]
+---
+# RoleBinding for the service account
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: komodo-sa-rb
+  namespace: default  # Change to your namespace if using a different one.
+  labels:
+    parent: skypilot
+subjects:
+  - kind: ServiceAccount
+    name: komodo-sa  
+roleRef:
+  kind: Role
+  name: komodo-sa-role 
+  apiGroup: rbac.authorization.k8s.io
+---
+# ClusterRole for the service account
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: komodo-sa-cluster-role
+  namespace: default  # Change to your namespace if using a different one.
+  labels:
+    parent: skypilot
+rules:
+  - apiGroups: ["*"]  # Required for creating pods, services, secrets and other necessary resources in the namespace.
+    resources: ["*"]
+    verbs: ["*"]
+---
+# ClusterRoleBinding for the service account
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: komodo-sa-cluster-role-binding
+  namespace: default  # Change to your namespace if using a different one.
+  labels:
+    parent: skypilot
+subjects:
+  - kind: ServiceAccount
+    name: komodo-sa 
+    namespace: default  # Change to your namespace if using a different one.
+roleRef:
+  kind: ClusterRole
+  name: komodo-sa-cluster-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Used for object store mounting
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: skypilot-system
+  labels:
+    parent: skypilot
+---
+# Create role in the skypilot-system
+# namespace to create FUSE device manager.
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: skypilot-system-service-account-role 
+  namespace: skypilot-system  # Do not change this namespace
+  labels:
+    parent: skypilot
+rules:
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
+---
+# Create rolebinding in the skypilot-system
+# namespace to create FUSE device manager.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: komodo-sa-skypilot-system-role-binding
+  namespace: skypilot-system  # Do not change this namespace
+  labels:
+    parent: skypilot
+subjects:
+  - kind: ServiceAccount
+    name: komodo-sa 
+    namespace: default  # Change this to the namespace where the service account is created
+roleRef:
+  kind: Role
+  name: skypilot-system-service-account-role 
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: komodo-secret
+  namespace: default
+  annotations:
+    kubernetes.io/service-account.name: "komodo-sa"
+type: kubernetes.io/service-account-token
+```
+
+If you want to use a namespace other than `default`, change the namespace on
+every line with the comment `Change to your namespace if using a different one`
+
+Copy this YAML to a file called `service-account.yaml` and then run:
+
+```bash
+kubectl apply -f service-account.yaml
+```
+
+### Step 2: Get the control plane endpoint
+
+To get the endpoint of the control plane of your cluster, simply run:
+
+```bash
+kubectl cluster-info  `kubectl config view | grep -m 1 "name" | awk '{ print $2 }'` | grep "control plane" | awk '{ print $NF }'
+```
+
+Save this URL for later.
+
+### Step 3: Get the service account token
+
+To get the service account token, simply run:
+
+```bash
+kubectl get secret komodo-secret --namespace default -o jsonpath='{.data.token}' | base64 -d
+```
+
+Save this token for later.
+
+### Step 4: (Optional) Get your certificate authority data
+
+For HTTPS control plane endpoints, Komodo needs the certificate authority data of your cluster in order to verify the server's TLS certificate.
+This is optional, but highly recommended.
+
+This data is likely already in your kubeconfig, in which case you can obtain it by running:
+
+```bash
+kubectl config view --raw --minify --flatten -o jsonpath='{.clusters[0].cluster.certificate-authority-data}'
+```
+
+If not, ask your IT administrator to obtain this data.
+
+### Step 5: Connect your Kubernetes cluster to Komodo
+
+Now that you have your control plane endpoint, service account token, and (optionally) your certificate authority data,
+simply navigate to the Settings page on the Komodo dashboard and click the Connect button under `Kubernetes`. 
+
+Here you can enter that data. If you used a different namespace in step 1, be sure to enter that here as well.
+
+And that's it! You can now launch your workflows on Komodo! Follow [this tutorial](../../quickstart) to get started.
