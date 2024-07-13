@@ -28,7 +28,6 @@ Currently supported GPU labels:
 * `cloud.google.com/gke-accelerator`: used by GKE clusters
 * `karpenter.k8s.aws/instance-gpu-name`: used by Karpenter
 
-<Tip>
 To check if your nodes contain the required GPU labels, run:
 ```bash
 output=$(kubectl get nodes --show-labels | awk -F'[, ]' '{for (i=1; i<=NF; i++) if ($i ~ /nvidia.com\/gpu.product=|cloud.google.com\/gke-accelerator=|karpenter.k8s.aws\/instance-gpu-name=/) print $i}')
@@ -39,7 +38,6 @@ echo "GPU Labels found:"
 echo "$output"
 fi
 ```
-</Tip>
 
 <Tip>
 Instructions for setting up NVIDIA GPU Operator on your cluster can be found [here](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html#install-nvidia-gpu-operator)
