@@ -47,174 +47,66 @@ Instructions for setting up NVIDIA GPU Operator on your cluster can be found [he
 
 ### Step 1: Create the Komodo Service Account
 
-Use the following YAML to create the service account that Komodo will use to launch your workflows on Kubernetes.
+To create a service account that  Komodo will use to launch your workloads on Kubernetes run:
 
-```yaml
-# Create service account
-kind: ServiceAccount
-apiVersion: v1
-metadata:
-  name: komodo-sa 
-  namespace: default  # Change to your namespace if using a different one.
-  labels:
-    parent: skypilot
----
-# Role for the service account
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: komodo-sa-role
-  namespace: default  # Change to your namespace if using a different one.
-  labels:
-    parent: skypilot
-rules:
-  - apiGroups: ["*"]  # Required for creating pods, services, secrets and other necessary resources in the namespace.
-    resources: ["*"]
-    verbs: ["*"]
----
-# RoleBinding for the service account
-kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: komodo-sa-rb
-  namespace: default  # Change to your namespace if using a different one.
-  labels:
-    parent: skypilot
-subjects:
-  - kind: ServiceAccount
-    name: komodo-sa  
-roleRef:
-  kind: Role
-  name: komodo-sa-role 
-  apiGroup: rbac.authorization.k8s.io
----
-# ClusterRole for the service account
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: komodo-sa-cluster-role
-  namespace: default  # Change to your namespace if using a different one.
-  labels:
-    parent: skypilot
-rules:
-  - apiGroups: ["*"]  # Required for creating pods, services, secrets and other necessary resources in the namespace.
-    resources: ["*"]
-    verbs: ["*"]
----
-# ClusterRoleBinding for the service account
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: komodo-sa-cluster-role-binding
-  namespace: default  # Change to your namespace if using a different one.
-  labels:
-    parent: skypilot
-subjects:
-  - kind: ServiceAccount
-    name: komodo-sa 
-    namespace: default  # Change to your namespace if using a different one.
-roleRef:
-  kind: ClusterRole
-  name: komodo-sa-cluster-role
-  apiGroup: rbac.authorization.k8s.io
----
-# Used for object store mounting
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: skypilot-system
-  labels:
-    parent: skypilot
----
-# Create role in the skypilot-system
-# namespace to create FUSE device manager.
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: skypilot-system-service-account-role 
-  namespace: skypilot-system  # Do not change this namespace
-  labels:
-    parent: skypilot
-rules:
-  - apiGroups: ["*"]
-    resources: ["*"]
-    verbs: ["*"]
----
-# Create rolebinding in the skypilot-system
-# namespace to create FUSE device manager.
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: komodo-sa-skypilot-system-role-binding
-  namespace: skypilot-system  # Do not change this namespace
-  labels:
-    parent: skypilot
-subjects:
-  - kind: ServiceAccount
-    name: komodo-sa 
-    namespace: default  # Change this to the namespace where the service account is created
-roleRef:
-  kind: Role
-  name: skypilot-system-service-account-role 
-  apiGroup: rbac.authorization.k8s.io
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: komodo-secret
-  namespace: default
-  annotations:
-    kubernetes.io/service-account.name: "komodo-sa"
-type: kubernetes.io/service-account-token
+```bash
+kubectl apply -f https://raw.githubusercontent.com/komodoai/komo_docs/main/files/komodo.yaml
 ```
 
-If you want to use a namespace other than `default`, change the namespace on
-every line with the comment `Change to your namespace if using a different one`
+This will create resources in the `default` namespace. If you'd like to run your workloads in another namespace, 
+download the YAML file above and change the namespace on every line with the comment `Change to your namespace if using a different one`
 
 Copy this YAML to a file called `service-account.yaml` and then run:
 
-```bash
-kubectl apply -f service-account.yaml
-```
+### Step 2: Get the values to connect cluster to Komodo
 
-### Step 2: Get the control plane endpoint
-
-To get the endpoint of the control plane of your cluster, simply run:
+Run the below script to get the cluster control plane endpoint, Komodo service account token, and optionally, the cluster certificate authority data.
 
 ```bash
-kubectl cluster-info  `kubectl config view | grep -m 1 "name" | awk '{ print $2 }'` | grep "control plane" | awk '{ print $NF }'
+CLUSTER_CONTROL_PLANE_ENDPOINT=$(kubectl cluster-info  `kubectl config view | grep -m 1 "name" | awk '{ print $2 }'` | grep "control plane" | awk '{ print $NF }')
+KOMODO_SA_SECRET=$(kubectl get secret komodo-secret --namespace default -o jsonpath='{.data.token}' | base64 -d)
+CLUSTER_CA_DATA=$(kubectl config view --raw --minify --flatten -o jsonpath='{.clusters[0].cluster.certificate-authority-data}' 2>/dev/null)
+if [ -z "$CLUSTER_CA_DATA" ]; then
+  CLUSTER_CA_DATA="No Cluster Certificate Authority data found"
+fi
+
+echo "Cluster Control Plane endpoint:"
+echo $CLUSTER_CONTROL_PLANE_ENDPOINT
+echo "\n"
+echo "Komodo Service Account Secret:"
+echo $KOMODO_SA_SECRET
+echo "\n"
+echo "Cluster Certificate Authority data:"
+echo $CLUSTER_CA_DATA
 ```
 
-Save this URL for later.
+<Tip>
+If no cluster certificate authority data was found, ask your IT administrator to obtain this data.
 
-### Step 3: Get the service account token
+This is optional but highly recommended so that Komodo can verify your control plane's TLS certificate.
+</Tip>
 
-To get the service account token, simply run:
+### Step 3: Connect your Kubernetes cluster to Komodo
 
-```bash
-kubectl get secret komodo-secret --namespace default -o jsonpath='{.data.token}' | base64 -d
-```
+Now that you have your control plane endpoint, service account token, and (optionally) your certificate authority data you're ready to connect it to Komodo.
 
-Save this token for later.
+In the Komodo console, navigate to the [Settings](https://app.komodoai.dev/settings) page, click `Connect` in the Kubernetes section and paste the values from Step 2 into the respective fields.
 
-### Step 4: (Optional) Get your certificate authority data
-
-For HTTPS control plane endpoints, Komodo needs the certificate authority data of your cluster in order to verify the server's TLS certificate.
-This is optional, but highly recommended.
-
-This data is likely already in your kubeconfig, in which case you can obtain it by running:
-
-```bash
-kubectl config view --raw --minify --flatten -o jsonpath='{.clusters[0].cluster.certificate-authority-data}'
-```
-
-If not, ask your IT administrator to obtain this data.
-
-### Step 5: Connect your Kubernetes cluster to Komodo
-
-Now that you have your control plane endpoint, service account token, and (optionally) your certificate authority data,
-simply navigate to the Settings page on the Komodo dashboard and click the Connect button under `Kubernetes`. 
-
-Here you can enter that data. If you used a different namespace in step 1, be sure to enter that here as well.
 
 And that's it! You can now launch your workflows on Komodo! Follow [this tutorial](../../quickstart) to get started.
+
+### FAQ
+
+<Accordion title="What is a Service Account in Kubernetes?">
+A Service Account in Kubernetes is an identity used by processes running within the cluster. It provides a way for pods to communicate securely with the Kubernetes API. Service accounts are used to manage permissions and control what actions can be performed by the processes within the cluster. In this guide, the Komodo service account is created to allow Komodo AI to interact with your Kubernetes cluster and launch workloads on your behalf.
+</Accordion>
+
+<Accordion title="Why Use Cluster Certificate Authority Data?">
+The Cluster Certificate Authority (CA) data is used to verify the identity of the Kubernetes control plane. This ensures that communication between Komodo AI and your Kubernetes cluster is secure and trusted. By providing the CA data, you enable Komodo to verify the TLS certificate presented by the control plane, preventing man-in-the-middle attacks and ensuring a secure connection. While optional, it is highly recommended to include this information to enhance the security of your cluster's integration with Komodo AI.
+</Accordion>
+
+<Accordion title="What Are the Supported GPU Labels and Why Are They Important?">
+Supported GPU labels are specific labels applied to your Kubernetes nodes to identify the type of GPU available. These labels are essential for Komodo AI to recognize and utilize the appropriate GPU resources for your workloads.
+
+By ensuring your nodes have the correct GPU labels, you enable Komodo AI to effectively allocate GPU resources for your AI and machine learning tasks, optimizing performance and efficiency.
+</Accordion>
