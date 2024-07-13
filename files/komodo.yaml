@@ -1,0 +1,149 @@
+# create-sky-sa.yaml
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: komodo-sa  # Change to your service account name
+  namespace: default  # Change to your namespace if using a different one.
+  labels:
+    parent: skypilot
+---
+# Role for the service account
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: komodo-sa-role  # Can be changed if needed
+  namespace: default  # Change to your namespace if using a different one.
+  labels:
+    parent: skypilot
+rules:
+  - apiGroups: ["*"]  # Required for creating pods, services, secrets and other necessary resources in the namespace.
+    resources: ["*"]
+    verbs: ["*"]
+---
+# RoleBinding for the service account
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: komodo-sa-rb  # Can be changed if needed
+  namespace: default  # Change to your namespace if using a different one.
+  labels:
+    parent: skypilot
+subjects:
+  - kind: ServiceAccount
+    name: komodo-sa  # Change to your service account name
+roleRef:
+  kind: Role
+  name: komodo-sa-role  # Use the same name as the role at line 14
+  apiGroup: rbac.authorization.k8s.io
+---
+# ClusterRole for the service account
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: komodo-sa-cluster-role  # Can be changed if needed
+  namespace: default  # Change to your namespace if using a different one.
+  labels:
+    parent: skypilot
+rules:
+  - apiGroups: ["*"]  # Required for creating pods, services, secrets and other necessary resources in the namespace.
+    resources: ["*"]
+    verbs: ["*"]
+---
+# ClusterRoleBinding for the service account
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: komodo-sa-cluster-role-binding  # Can be changed if needed
+  namespace: default  # Change to your namespace if using a different one.
+  labels:
+    parent: skypilot
+subjects:
+  - kind: ServiceAccount
+    name: komodo-sa  # Change to your service account name
+    namespace: default  # Change to your namespace if using a different one.
+roleRef:
+  kind: ClusterRole
+  name: komodo-sa-cluster-role  # Use the same name as the cluster role at line 43
+  apiGroup: rbac.authorization.k8s.io
+---
+# Optional: If using object store mounting, create the skypilot-system namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: skypilot-system  # Do not change this
+  labels:
+    parent: skypilot
+---
+# Optional: If using object store mounting, create role in the skypilot-system
+# namespace to create FUSE device manager.
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: skypilot-system-service-account-role  # Can be changed if needed
+  namespace: skypilot-system  # Do not change this namespace
+  labels:
+    parent: skypilot
+rules:
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
+---
+# Optional: If using object store mounting, create rolebinding in the skypilot-system
+# namespace to create FUSE device manager.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: komodo-sa-skypilot-system-role-binding
+  namespace: skypilot-system  # Do not change this namespace
+  labels:
+    parent: skypilot
+subjects:
+  - kind: ServiceAccount
+    name: komodo-sa  # Change to your service account name
+    namespace: default  # Change this to the namespace where the service account is created
+roleRef:
+  kind: Role
+  name: skypilot-system-service-account-role  # Use the same name as the role at line 88
+  apiGroup: rbac.authorization.k8s.io
+---
+# Optional: Role for accessing ingress resources
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: komodo-sa-role-ingress-nginx  # Can be changed if needed
+  namespace: ingress-nginx  # Do not change this namespace
+  labels:
+    parent: skypilot
+rules:
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["list", "get", "watch"]
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources: ["roles", "rolebindings"]
+    verbs: ["list", "get", "watch"]
+---
+# Optional: RoleBinding for accessing ingress resources
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: komodo-sa-rolebinding-ingress-nginx  # Can be changed if needed
+  namespace: ingress-nginx  # Do not change this namespace
+  labels:
+    parent: skypilot
+subjects:
+  - kind: ServiceAccount
+    name: komodo-sa  # Change to your service account name
+    namespace: default  # Change this to the namespace where the service account is created
+roleRef:
+  kind: Role
+  name: komodo-sa-role-ingress-nginx  # Use the same name as the role at line 119
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: komodo-secret
+  namespace: default
+  annotations:
+    kubernetes.io/service-account.name: "komodo-sa"
+type: kubernetes.io/service-account-token
