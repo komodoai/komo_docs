@@ -28,14 +28,35 @@ Currently supported GPU labels:
 * `cloud.google.com/gke-accelerator`: used by GKE clusters
 * `karpenter.k8s.aws/instance-gpu-name`: used by Karpenter
 
-To check if your nodes contain the required GPU labels, run:
+To check if your cluster is compatible, run:
 ```bash
+echo "Checking nodes for external IP addresses..."
+nodes=$(kubectl get nodes -o=jsonpath="{.items[*]['status.addresses', 'metadata.annotations']}" | tr -d " \t\n\r")
+FOUND_EXTERNAL_IP_FROM_STATUS=false
+FOUND_EXTERNAL_IP_FROM_ANNOTATION=false
+if [[ $nodes == *"ExternalIP"* ]]; then
+  FOUND_EXTERNAL_IP_FROM_STATUS=true
+fi
+if [[ $nodes == *"rke.cattle.io/external-ip"* ]]; then
+  FOUND_EXTERNAL_IP_FROM_ANNOTATION=true
+fi
+FOUND_EXTERNAL_IPS=""
+if [ "$FOUND_EXTERNAL_IP_FROM_STATUS" = true ] || [ "$FOUND_EXTERNAL_IP_FROM_ANNOTATION" = true ]; then
+  FOUND_EXTERNAL_IPS="FOUND"
+fi
+echo "Checking nodes for GPU labels..."
 output=$(kubectl get nodes --show-labels | awk -F'[, ]' '{for (i=1; i<=NF; i++) if ($i ~ /nvidia.com\/gpu.product=|cloud.google.com\/gke-accelerator=|karpenter.k8s.aws\/instance-gpu-name=/) print $i}')
 if [ -z "$output" ]; then
-echo "No valid GPU labels found."
+  echo "No valid GPU labels found."
 else
-echo "GPU Labels found:"
-echo "$output"
+  echo "GPU Labels found:"
+  echo "$output"
+fi
+if [ -n "$FOUND_EXTERNAL_IPS" ] && [ -n "$output" ]; then
+  echo "Your cluster is ready for GPU workloads with Komodo AI"
+else
+  echo "Your cluster is not ready for GPU workloads with Komodo AI."
+  echo "Contact us at hello@komodoai.dev or join our Discord server at https://discord.gg/baJGK6RKZC for help."
 fi
 ```
 
