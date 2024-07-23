@@ -14,7 +14,7 @@
   "topbarLinks": [
     {
       "name": "Developer Guide",
-      "url": "komodoai"
+      "url": "quickstart"
     },
     {
       "name": "Reference",
