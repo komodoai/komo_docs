@@ -113,9 +113,9 @@
           "group": "Connecting your clouds",
           "pages": [
             "tutorials/connecting-clouds/overview",
+            "tutorials/connecting-clouds/azure",
             "tutorials/connecting-clouds/gcp",
-            "tutorials/connecting-clouds/kubernetes",
-            "tutorials/connecting-clouds/azure"
+            "tutorials/connecting-clouds/kubernetes"
           ]
         }
       ]
