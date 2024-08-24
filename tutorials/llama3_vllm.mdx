@@ -2,7 +2,7 @@
 title: Running Llama3 with vLLM
 ---
 
-This tutorial will guide you through running Llama3 on **your infrastructure** with vLLM using Komodo AI. Follow these steps to configure and deploy Llama3 effectively.
+This tutorial will guide you through serving Llama3 with vLLM on Komodo Cloud. Follow these steps to configure and deploy Llama3 effectively.
 
 ### Step 1: Create the service config
 
@@ -22,37 +22,19 @@ service:
     # always run on exactly 1 replica, with no autoscaling
     min_replicas: 1
 
-  # An actual request for readiness probe.
   readiness_probe:
     initial_delay_seconds: 1800
-    path: /v1/chat/completions
-    post_data:
-      model: meta-llama/Meta-Llama-3-8B-Instruct
-      messages:
-        - role: user
-          content: Hello! What is your name?
-      max_tokens: 1
+    path: /health
 
 resources:
-  gpus: {A10G:1, A10:1}
-  cpus: 8
-  disk_size: 512 # Ensure model checkpoints can fit.
-  ports: [8000] # Expose to internet traffic.
+  gpus: A10:1
+  ports: 8000
 
 setup: |
-  conda activate vllm
-  if [ $? -ne 0 ]; then
-    conda create -n vllm python=3.10 -y
-    conda activate vllm
-  fi
-
   pip install vllm==0.4.2
-  # Install Gradio for web UI.
-  pip install gradio openai
   pip install flash-attn==2.5.9.post1
 
 run: |
-  conda activate vllm
   echo 'Starting vllm api server...'
 
   # https://github.com/vllm-project/vllm/issues/3098

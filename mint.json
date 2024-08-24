@@ -107,8 +107,6 @@
     {
       "group": "Cloud Accounts",
       "pages": [
-        "supportedclouds",
-        "requesting_quota_increase",
         {
           "group": "Connecting your clouds",
           "pages": [
@@ -117,7 +115,9 @@
             "tutorials/connecting-clouds/gcp",
             "tutorials/connecting-clouds/kubernetes"
           ]
-        }
+        },
+        "supportedclouds",
+        "requesting_quota_increase"
       ]
     }
   ],

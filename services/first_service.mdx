@@ -9,10 +9,10 @@ Let's define our very first service - a simple HTTP server.
 Copy the following YAML into a `simple-http.yaml` file:
 ```yaml
 resources:
-  # 1x A10/A10G GPU
-  accelerators: {A10G:1, A10:1}
+  # 1x A10 GPU
+  accelerators: A10:1
   # Open port 8000
-  ports: [8000]
+  ports: 8000
 
 envs:
   # set the environment variable MY_ENV_VAR to my-value
@@ -28,7 +28,7 @@ setup: |
 
 # Typical uses:
 #    torchserve ..
-#    python -u -m vllm.entrypoints.openai.api_server ...
+#    vllm serve ...
 # Invoked under the workdir (ie. can use its files)
 run: |
   python -m http.server --port 8000
@@ -90,13 +90,13 @@ You can stream the logs for the replicas right from the web dashboard.
 ### 4. Make a request
 
 When you launch the service, the CLI will print out the endpoint for the service. Alternatively, you can find it on the web dashboard as well.
-It will look like: `https://services.komodoai.dev/service-id`
+It will look like: `https://services.komodo.io/service-id`
 
 You can use this endpoint as you would any other URL. This points to our load balancer, which will redirect you to one of the replicas,
 so if you're using curl, make sure to specify the `-L` flag to follow redirects:
 
 ```bash
-curl -L https://services.komodoai.dev/service-id
+curl -L https://services.komodo.io/service-id
 ```
 
 ### 3. Terminate the service

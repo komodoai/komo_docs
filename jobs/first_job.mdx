@@ -9,8 +9,8 @@ Let's define our very first job, a simple job that runs `nvidia-smi`.
 Copy the following YAML into a `show-gpus.yaml` file:
 ```yaml
 resources:
-  # 1x A10/A10G GPU
-  accelerators: {A10G:1, A10:1}
+  # 1x A10 GPU
+  accelerators: A10:1
 
 envs:
   # set the environment variable MY_ENV_VAR to my-value

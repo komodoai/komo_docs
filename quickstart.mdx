@@ -4,14 +4,10 @@ title: "Quickstart"
 
 Create an account, connect your cloud account, and start running your workflows in minutes.
 
-### 1. Create an account and connect your cloud
+### 1. Create an account
 
-Before you get started, make sure to create an account and connect your cloud account(s).
+Before you get started, make sure to create an account at [app.komodo.io](https://app.komodo.io).
 
-1. [Sign up](https://app.komodoai.dev) for a free account at [app.komodoai.dev](https://app.komodoai.dev) and log in.
-2. Connect a cloud provider on the [Settings](https://app.komodoai.dev/settings) page.
-
-<img src="images/settings-cloud-connect-beacon.png" />
 
 ### 2. Install Komodo CLI and authenticate
 
@@ -21,7 +17,7 @@ Install the CLI:
 pip install komo
 ```
 
-Head to the [Settings](https://app.komodoai.dev/settings) page and copy your API key.
+Head to the [Settings](https://app.komodo.io/settings) page and copy your API key.
 
 <img height="400" src="images/settings-api-key.png" />
 
@@ -38,8 +34,8 @@ Let's spin up a development machine
 Copy the following YAML into a `dev.yaml` file:
 ```yaml
 resources:
-  # 1x A10/A10G GPU
-  accelerators: {A10G:1, A10:1}
+  # 1x A10 GPU
+  accelerators: A10:1
 
 envs:
   # set the environment variable MY_ENV_VAR to my-value
@@ -74,8 +70,8 @@ Let's define our very first job, a simple Hello World! program.
 Copy the following YAML into a `hello.yaml` file:
 ```yaml
 resources:
-  # 1x A10/A10G GPU
-  accelerators: {A10G:1, A10:1}
+  # 1x A100 GPU
+  accelerators: A100:1
 
 envs:
   # set the environment variable MY_ENV_VAR to my-value
@@ -104,7 +100,7 @@ To launch this job, simply run:
 komo job launch hello.yaml
 ```
 
-And that's it! The logs from the job will be streamed by the CLI in real-time, and you can also access them from the [web dashboard](https://app.komodoai.dev). Once the job finishes, the remote instance will be terminated.
+And that's it! The logs from the job will be streamed by the CLI in real-time, and you can also access them from the [web dashboard](https://app.komodo.io). Once the job finishes, the remote instance will be terminated.
 
 
 ### 4. Launch a service
@@ -115,8 +111,8 @@ Copy the follwing YAML into a `http-service.yaml` file:
 
 ```yaml
 resources:
-  # 1x A10/A10G GPU
-  accelerators: {A10G:1, A10:1}
+  # 1x A10 GPU
+  accelerators: A10:1
   # Open port 8000
   ports: [8000]
 

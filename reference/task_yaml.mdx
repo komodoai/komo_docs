@@ -26,17 +26,9 @@ num_nodes: 1
 
 # Per-node resource requirements (optional).
 resources:
-  # The cloud to use (optional). If not specified, Komodo will select the best cloud for your task
-  # based on GPU availability and pricing.
-  cloud: aws
-
   # The region to use (optional). Auto-failover will be disabled
   # if this is specified.
   region: us-east-1
-
-  # The zone to use (optional). Auto-failover will be disabled
-  # if this is specified.
-  zone: us-east-1a
 
   # Accelerator name and count per node (optional).
   #
@@ -56,6 +48,21 @@ resources:
   #     Format: {<name>:<count>, ...}
   #     accelerators: {'K80:1', 'V100:1', 'T4:1'}
   accelerators: V100:4
+
+  # Ports to expose (optional).
+  #
+  # All ports specified here will be exposed to the public Internet.
+  #
+  # Could be an integer, a range, or a list of integers and ranges:
+  #   To specify a single port:
+  #     ports: 8081
+  #   To specify a port range:
+  #     ports: 10052-10100
+  #   To specify multiple ports / port ranges:
+  #     ports:
+  #       - 8080
+  #       - 10022-10040
+  ports: 8081
 
   # Number of vCPUs per node (optional).
   #
@@ -81,6 +88,17 @@ resources:
   # the corresponding instance type is automatically inferred.
   instance_type: p3.8xlarge
 
+  #####################################################################################################
+  ### ALL FIELDS BELOW IN THIS RESOURCES SECTION ARE ONLY APPLICABLE WHEN CONNECTING YOUR OWN CLOUD ###
+  #####################################################################################################
+
+  # The cloud to use (optional). If not specified, Komodo Cloud will be used.
+  cloud: aws
+
+  # The zone to use (optional). Auto-failover will be disabled
+  # if this is specified.
+  zone: us-east-1a
+
   # Whether the cluster should use spot instances (optional).
   # If unspecified, defaults to False (on-demand instances).
   # NOTE: spot instances are not currently supported, this must be set to False
@@ -98,32 +116,6 @@ resources:
   #   medium: 3000 IOPS; read 220 MB/s; write 200 MB/s
   #   high: 6000 IOPS; 340 MB/s; write 250 MB/s
   disk_tier: medium
-
-  # Ports to expose (optional).
-  #
-  # All ports specified here will be exposed to the public Internet. Under
-  # the hood, a firewall rule / inbound rule is automatically added to allow
-  # inbound traffic to these ports. Applies to all VMs of a cluster created
-  # with this field set.
-  #
-  # Currently only TCP protocol is supported.
-  #
-  # Ports Lifecycle:
-  # A cluster's ports will be updated whenever `komo <CMD> launch` is executed.
-  #
-  # Could be an integer, a range, or a list of integers and ranges:
-  #   To specify a single port:
-  #     ports: 8081
-  #   To specify a port range:
-  #     ports: 10052-10100
-  #   To specify multiple ports / port ranges:
-  #     ports:
-  #       - 8080
-  #       - 10022-10040
-  # 
-  # NOTE: On Lambda Labs, you must expose ports through the
-  # firewall settings page (https://cloud.lambdalabs.com/firewall).
-  ports: 8081
 
   # Additional accelerator metadata (optional); only used for TPU node
   # and TPU VM.
@@ -195,40 +187,8 @@ resources:
   labels:
     my-label: my-value
 
-  # Candidate resources (optional). If specified, Komodo will only use
-  # these candidate resources to launch the cluster. The fields specified
-  # outside of `any_of`, `ordered` will be used as the default values for
-  # all candidate resources, and any duplicate fields specified inside
-  # `any_of`, `ordered` will override the default values.
-  # `any_of:` means that Komodo will try to find a resource that matches
-  # any of the candidate resources, i.e. the failover order will be decided
-  # by the optimizer.
-  # `ordered:` means that Komodo will failover through the candidate
-  # resources with the specified order.
-  # Note: accelerators under `any_of` and `ordered` cannot be a list or set.
-  any_of:
-    - cloud: aws
-      region: us-west-2
-      accelerators: V100
-    - cloud: gcp
-      accelerators: A100
-
 # Environment variables (optional). These values can be accessed in the
 # `file_mounts`, `setup`, and `run` sections below.
-#
-# If you want to use a docker image as runtime environment in a private
-# registry, you can specify your username, password, and registry server as
-# task environment variable.  For example:
-#   envs:
-#     SKYPILOT_DOCKER_USERNAME: <username>
-#     SKYPILOT_DOCKER_PASSWORD: <password>
-#     SKYPILOT_DOCKER_SERVER: <registry server>
-#
-# Komodo will execute `docker login --username <username> --password
-# <password> <registry server>` before pulling the docker image. For `docker
-# login`, see https://docs.docker.com/engine/reference/commandline/login/
-#
-# For more information about docker support in Komodo, please refer to the `image_id` section above.
 envs:
   MY_BUCKET: s3://my-s3-bucket
   MY_LOCAL_PATH: tmp-workdir
