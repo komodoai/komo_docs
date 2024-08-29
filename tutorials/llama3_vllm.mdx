@@ -27,26 +27,14 @@ service:
     path: /health
 
 resources:
-  gpus: A10:1
+  gpus: A100:1
   ports: 8000
 
 setup: |
-  pip install vllm==0.4.2
-  pip install flash-attn==2.5.9.post1
+  pip install vllm vllm-flash-attn
 
 run: |
-  echo 'Starting vllm api server...'
-
-  # https://github.com/vllm-project/vllm/issues/3098
-  export PATH=$PATH:/sbin
-
-  # NOTE: --gpu-memory-utilization 0.95 needed for 4-GPU nodes.
-  python -u -m vllm.entrypoints.openai.api_server \
-    --port 8000 \
-    --model $MODEL_NAME \
-    --trust-remote-code --tensor-parallel-size $SKYPILOT_NUM_GPUS_PER_NODE \
-    --gpu-memory-utilization 0.95 \
-    --max-num-seqs 64
+  vllm serve meta-llama/Meta-Llama-3-8B-Instruct --tensor-parallel-size 1 --port 8000
 ```
 
 ### Step 2: Launch the Llama3 Service
@@ -59,21 +47,5 @@ komo service launch service-llama3.yaml --name llama3-8b
 
 ### Step 3: Chat with Llama3
 
-Once the service status is `RUNNING`, access your Llama3 service via the URL provided by the web dashboard or the CLI.
-
-<Note>You can find the URL for your service on the dashboard, or by running `komo service list`</Note>
-
-```bash
-curl -L '<YOUR_SERVICE_URL>/v1/chat/completions' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "model": "meta-llama/Meta-Llama-3-8B-Instruct",
-       "messages": [
-         {
-           "role": "user",
-           "content": "Who are you?"
-         }
-       ],
-       "max_tokens": 100
-     }'
-```
+Once the service status is `RUNNING`, you can chat with it right from the dashboard!
+The endpoint for the service is also provided in the dashboard.
