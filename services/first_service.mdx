@@ -4,7 +4,7 @@ title: Launch Your First Service
 
 Let's define our very first service - a simple HTTP server.
 
-### 1. Define the service config
+## 1. Define the service config
 
 Copy the following YAML into a `simple-http.yaml` file:
 ```yaml
@@ -49,7 +49,7 @@ service:
     path: /
 ```
 
-#### Scaling to Zero
+### Scaling to Zero
 
 You can set `num_replicas` to 0 in order to enable scale-to-zero. When there are no replicas running, and you try
 to make a request to the service, you will get back a response from the load balancer with a message that says 'No ready replicas'.
@@ -59,7 +59,7 @@ If you are enabling scale-to-zero, you should add error-handling logic in your c
 As soon as the first request is made when there are zero replicas, a replica will be immediately provisioned. The time it takes for the replica
 to be ready depends largely on the boot time of your cloud instances, as well as the time it takes to run your setup/run scripts.
 
-### 2. Launch the service
+## 2. Launch the service
 
 Launch the service by simply running:
 
@@ -75,7 +75,7 @@ This will wait for the service to be up and running. You can detach as soon as t
 komo service launch simple-http.yaml --name simple-http -d
 ```
 
-#### Listing services
+### Listing services
 
 You can list all the services you have running using the CLI:
 
@@ -83,11 +83,11 @@ You can list all the services you have running using the CLI:
 komo service list
 ```
 
-### Service logs
+## Service logs
 
 You can stream the logs for the replicas right from the web dashboard.
 
-### 4. Make a request
+## 4. Make a request
 
 When you launch the service, the CLI will print out the endpoint for the service. Alternatively, you can find it on the web dashboard as well.
 It will look like: `https://services.komodo.io/service-id`
@@ -99,7 +99,7 @@ so if you're using curl, make sure to specify the `-L` flag to follow redirects:
 curl -L https://services.komodo.io/service-id
 ```
 
-### 3. Terminate the service
+## 3. Terminate the service
 
 <Note>When interacting with services using the CLI, you reference them using their **unique name** rather than their ID.</Note>
 

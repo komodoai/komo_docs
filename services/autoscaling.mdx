@@ -53,7 +53,7 @@ replica_policy:
 - Adjust this value to control how quickly your service reduces replicas when the load decreases.
 - Example: `downscale_delay_seconds: 1200`
 
-### Example Configuration
+## Example Configuration
 
 ```yaml
 service:
@@ -75,7 +75,7 @@ In this example:
 - The service will scale up after 5 minutes of sustained high load (`upscale_delay_seconds: 300`).
 - The service will scale down after 20 minutes of sustained low load (`downscale_delay_seconds: 1200`).
 
-### Zero to N and Back to Zero Scaling
+## Zero to N and Back to Zero Scaling
 
 Komodo AI Services support both scaling up from zero replicas to meet demand and scaling back down to zero when the service is idle. This ensures efficient resource usage, especially for applications with intermittent or variable workloads.
 
@@ -83,12 +83,12 @@ Komodo AI Services support both scaling up from zero replicas to meet demand and
 - **Zero to N:** The platform will automatically create the necessary replicas to handle the incoming load based on your `target_qps_per_replica` and `max_replicas` settings.
 - **Back to Zero:** If the QPS drops and remains below the target for the duration specified in `downscale_delay_seconds`, the platform will gradually reduce the number of replicas down to zero, if appropriate.
 
-### Best Practices
+## Best Practices
 - **Set Reasonable Defaults:** Ensure that your `min_replicas` is set to a value that covers your base workload. Use `max_replicas` to prevent overprovisioning.
 - **Monitor and Adjust:** Regularly monitor your service performance and adjust `target_qps_per_replica`, `upscale_delay_seconds`, and `downscale_delay_seconds` based on actual usage patterns.
 - **Testing:** Test your autoscaling configuration in a staging environment to ensure it behaves as expected under different load conditions.
 
-### Conclusion
+## Conclusion
 
 Autoscaling in Komodo AI Services provides a flexible and efficient way to manage your service capacity. By configuring the `replica_policy` correctly, you can ensure your services are both responsive to demand and cost-effective.
 

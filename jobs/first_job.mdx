@@ -4,7 +4,7 @@ title: Launch Your First Job
 
 Let's define our very first job, a simple job that runs `nvidia-smi`.
 
-### 1. Define the job config
+## 1. Define the job config
 
 Copy the following YAML into a `show-gpus.yaml` file:
 ```yaml
@@ -45,7 +45,7 @@ run: |
   nvidia-smi > /output/nvidia-smi-output.txt
 ```
 
-### 2. Launch the job
+## 2. Launch the job
 
 To launch this job, simply run:
 
@@ -69,7 +69,7 @@ You can also launch the job and detach from the logs:
 komo job launch show-gpus.yaml -d
 ```
 
-### 3. Get the job logs
+## 3. Get the job logs
 
 You can see the logs for the job in the dashboard, or get them using the CLI:
 
@@ -85,7 +85,7 @@ For jobs that are currently running, you can live stream the logs:
 komo job logs --follow <job-id>
 ```
 
-### 4. SSH into the job instance
+## 4. SSH into the job instance
 
 You can also SSH into the instance that the job is running on:
 
@@ -93,7 +93,7 @@ You can also SSH into the instance that the job is running on:
 komo job ssh <job-id>
 ```
 
-### 5. List all jobs
+## 5. List all jobs
 
 You can list all the jobs you have launched by running:
 

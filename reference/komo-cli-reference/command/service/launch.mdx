@@ -4,11 +4,11 @@ title: launch
 
 Launch a Komodo Service.
 
-### Usage
+## Usage
 
 `komo service launch [OPTIONS] CONFIG_FILE`
 
-### Options
+## Options
 
 | Option                            | Required | Description                                                                                                         | Type |
 | --------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------- | ---- |
@@ -16,8 +16,9 @@ Launch a Komodo Service.
 | &#x2011;c, &#x2011;&#x2011;cloud  | No       | Name of the cloud to use. If not provided, Komodo will select a cloud for you based on GPU prices and availability. | str  |
 | &#x2011;g, &#x2011;&#x2011;gpus   | No       | Which gpus to use, in the format \<GPU type\>:\<Num GPUs\> (eg. A100:4)                                             | str  |
 | &#x2011;d, &#x2011;&#x2011;detach | No       | Exit after the service is started instead of following the logs                                                     | flag |
+| &#x2011;e, &#x2011;&#x2011;env       | No       | Specify an environment variable in the form `--env key=value` or `--env key` (value will come from the value of `$key` in your shell). You can use this flag multiple times to specify multiple environment variables. | str  |
 
-### Examples
+## Examples
 
 Launch a simple HTTP service on AWS using a config file.
 

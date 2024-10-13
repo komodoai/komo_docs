@@ -4,7 +4,7 @@ title: Kubernetes
 
 This guide will walk you through the process of getting your Kubernetes cluster ready to be used on Komodo.
 
-### Supported Kubernetes deployments
+## Supported Kubernetes deployments
 
 * Managed Kubernetes services (Amazon - EKS, Google Cloud - GKE)
 * On-prem clusters (Kubeadm, Rancher, RKE, K3s)
@@ -13,7 +13,7 @@ This guide will walk you through the process of getting your Kubernetes cluster 
 If you need help with anything below, please let us know on [Discord](https://discord.gg/baJGK6RKZC)! 😊
 </Tip>
 
-### Prerequisites
+## Prerequisites
 
 * A Kubernetes cluster with a publicly-accessible control plane endpoint
 * Each cluster node assigned a public (external) IP
@@ -64,7 +64,7 @@ fi
 Instructions for setting up NVIDIA GPU Operator on your cluster can be found [here](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html#install-nvidia-gpu-operator)
 </Tip>
 
-### Step 1: Create the Komodo Service Account
+## Step 1: Create the Komodo Service Account
 
 To create a service account that  Komodo will use to launch your workloads on Kubernetes run:
 
@@ -77,7 +77,7 @@ download the YAML file above and change the namespace on every line with the com
 
 Copy this YAML to a file called `service-account.yaml` and then run:
 
-### Step 2: Get the values to connect cluster to Komodo
+## Step 2: Get the values to connect cluster to Komodo
 
 Run the below script to get the cluster control plane endpoint, Komodo service account token, and optionally, the cluster certificate authority data.
 
@@ -105,7 +105,7 @@ If no cluster certificate authority data was found, ask your IT administrator to
 This is optional but highly recommended so that Komodo can verify your control plane's TLS certificate.
 </Tip>
 
-### Step 3: Connect your Kubernetes cluster to Komodo
+## Step 3: Connect your Kubernetes cluster to Komodo
 
 Now that you have your control plane endpoint, service account token, and (optionally) your certificate authority data you're ready to connect it to Komodo.
 
@@ -114,7 +114,7 @@ In the Komodo console, navigate to the [Settings](https://app.komodoai.dev/setti
 
 And that's it! You can now launch your workflows on Komodo! Follow [this tutorial](../../quickstart) to get started.
 
-### FAQ
+## FAQ
 
 <Accordion title="What is a Service Account in Kubernetes?">
 A Service Account in Kubernetes is an identity used by processes running within the cluster. It provides a way for pods to communicate securely with the Kubernetes API. Service accounts are used to manage permissions and control what actions can be performed by the processes within the cluster. In this guide, the Komodo service account is created to allow Komodo AI to interact with your Kubernetes cluster and launch workloads on your behalf.

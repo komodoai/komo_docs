@@ -1,17 +1,27 @@
 ---
-title: Cloud Object Storage
+title: Storage
 ---
+
+## Overview
 
 Komodo supports reading/writing to cloud object storage buckets on your machines/jobs/services.
 
-<Note>Currently, only S3 buckets are supported, however support for GCS and R2 is coming soon!</Note>
+The following object storage providers are currently supported:
+* Amazon S3
+* Google Cloud Storage (GCS)
+* Azure Blob Storage
+
+<Note>To use these providers, you will first need to [connect your cloud account](tutorials/connecting-clouds/overview)</Note>
 
 There are 2 modes for using storage buckets:
     1. COPY - copies the contents of the bucket to a specific location on the instance. This is helpful for datasets where you need fast read access. Any files written here will NOT be uploaded back to the bucket.
     2. MOUNT - mounts the bucket as a file system on the instance. This is helpful for having a perisistent storage location, where you can store your model checkpoints and access them even after your tasks finish. Any files written here will be uploaded back to the bucket.
 
 Here is an example of what you'd need to include in your task config to effectively use cloud storage buckets:
+Here is how you can use cloud storage from different providers:
 
+<Tabs>
+  <Tab title="Amazon S3">
 ```yaml
 file_mounts:
   # Copy the contents of an S3 bucket to /dataset
@@ -26,9 +36,45 @@ file_mounts:
     source: s3://my-output-bucket
     mode: MOUNT
 ```
+  </Tab>
+
+  <Tab title="Google Cloud Storage">
+```yaml
+file_mounts:
+  # Copy the contents of a GCS bucket to /dataset
+  /dataset:
+    source: gs://my-dataset
+    mode: COPY
+
+  # Mount a GCS bucket to /output
+  # Any files written here (eg. model checkpoints) will be uploaded back
+  # to the GCS bucket
+  /output:
+    source: gs://my-output-bucket
+    mode: MOUNT
+```
+  </Tab>
+
+  <Tab title="Azure Blog Storage">
+```yaml
+file_mounts:
+  # Copy the contents of an Azure Blog Storage container to /dataset
+  /dataset:
+    source: https://<account name>.blob.core.windows.net/<container name>
+    mode: COPY
+
+  # Mount an Azure Blog Storage container to /output
+  # Any files written here (eg. model checkpoints) will be uploaded back
+  # to the container
+  /output:
+    source: https://<account name>.blob.core.windows.net/<container name>
+    mode: MOUNT
+```
+  </Tab>
+</Tabs>
 
 
-### Picking a storage mode
+## Picking a storage mode
 
 <br />
 

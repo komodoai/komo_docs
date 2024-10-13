@@ -1,0 +1,40 @@
+---
+title: Using Docker Containers
+---
+
+## Overview
+
+You can use docker containers in one of two ways:
+
+* As a runtime environment - your setup and run commands will be executed inside the container
+* As a task - run `docker run` inside your setup/run commands
+
+## Docker Containers as a Runtime Environment
+
+To use a docker container as a runtime environment, update your task yaml as follows:
+
+```yaml
+resources:
+    accelerators: A100:1
+    image_id: docker:<image_id> # eg. docker:nvcr.io/nvidia/pytorch:23.10-py3
+
+setup: |
+    # this will get run inside the container
+
+run: |
+    # this will get run inside the container
+```
+
+## Docker Containers as a Task
+
+Alternatively, you can run a docker image right inside your setup/run commands:
+
+```yaml
+resources:
+    accelerators: A100:1
+
+run: |
+    docker run --gpus all --shm-size 1g -v ~/data:/data \
+    ghcr.io/huggingface/text-generation-inference \
+    --model-id lmsys/vicuna-13b-v1.5
+```

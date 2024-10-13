@@ -4,11 +4,11 @@ title: launch
 
 Launch a Komodo machine with whatever resources you need.
 
-### Usage
+## Usage
 
 `komo machine launch [OPTIONS] CONFIG_FILE`
 
-### Options
+## Options
 
 | Option                            | Required | Description                                                                                                         | Type |
 | --------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------- | ---- |
@@ -17,8 +17,9 @@ Launch a Komodo machine with whatever resources you need.
 | &#x2011;g, &#x2011;&#x2011;gpus   | No       | Which gpus to use, in the format \<GPU type\>:\<Num GPUs\> (eg. A100:4)                                             | str  |
 | &#x2011;d, &#x2011;&#x2011;detach | No       | Do not wait for the machine to start up.                                                                            | flag |
 | &#x2011;&#x2011;notebook          | No       | Launch a Jupyter Notebook on the machine.                                                                           | flag |
+| &#x2011;e, &#x2011;&#x2011;env       | No       | Specify an environment variable in the form `--env key=value` or `--env key` (value will come from the value of `$key` in your shell). You can use this flag multiple times to specify multiple environment variables. | str  |
 
-### Examples
+## Examples
 
 Launch a machine named `dev`
 

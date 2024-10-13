@@ -32,6 +32,8 @@
       "pages": [
         "komodoai",
         "quickstart",
+        "cloud_object_storage",
+        "multi_node_tasks",
         {
           "group": "Machines",
           "pages": [
@@ -51,10 +53,6 @@
             "services/first_service",
             "services/autoscaling"
           ]
-        },
-        {
-          "group": "Using Data",
-          "pages": ["using_data/cloud_object_storage"]
         }
       ]
     },

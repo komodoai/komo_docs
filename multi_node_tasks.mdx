@@ -1,0 +1,70 @@
+---
+title: Distributed Multi-Node Tasks
+---
+
+## Overview
+
+In this section, we will cover how to launch multi-node tasks.
+
+<Note>Currently, only multi-node jobs are supported. Support for multi-node services is coming soon. If you need multi-node services, send us an email at support@komodo.io.</Note>
+
+## Config
+
+To make a job config multi-node, simply add the following to your yaml config:
+
+```yaml
+num_nodes: 2 # replace this with the number of nodes you need
+```
+
+For example, to launch a job with 16 A100s, distributed across 2 nodes, you could do so like this:
+
+```yaml
+resources:
+    accelerators: A100:8
+
+num_nodes: 2
+
+setup: ...
+
+run: ...
+```
+
+## Environment Variables
+
+The following environment variables are provided to help you coordinate your distributed jobs:
+
+* `NUM_NODES`: the number of nodes that are part of the task
+
+* `NODE_RANK`: the rank of the node executing the task
+
+* `NODE_IPS`: a string of IP addresses of the nodes that are part of the task, where each line contains one IP address
+
+* `NUM_GPUS_PER_NODE`: the number of GPUs available on each node
+
+## Pytorch Example
+
+Here is an example of a job config for a multi-node training job using torchrun:
+
+```yaml
+resources:
+  accelerators: A100:8
+
+num_nodes: 2
+
+workdir: .
+
+setup: |
+  set -e
+  pip install torch
+
+run: |
+  set -e
+  MASTER_ADDR=`echo "$NODE_IPS" | head -n1`
+  torchrun \
+    --nnodes $NUM_NODES \
+    --master-addr $MASTER_ADDR \
+    --nproc_per_node=$NUM_GPUS_PER_NODE \
+    --node_rank=$NODE_RANK \
+    --master_port=12375 \
+    train.py
+```

@@ -4,11 +4,11 @@ title: launch
 
 Launch a Komodo job.
 
-### Usage
+## Usage
 
 `komo job launch [OPTIONS] CONFIG_FILE`
 
-### Options
+## Options
 
 | Option                               | Required | Description                                                                                                         | Type |
 | ------------------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------- | ---- |
@@ -17,9 +17,10 @@ Launch a Komodo job.
 | &#x2011;g, &#x2011;&#x2011;gpus      | No       | Which gpus to use, in the format \<GPU type\>:\<Num GPUs\> (eg. A100:4)                                             | str  |
 | &#x2011;n, &#x2011;&#x2011;num-nodes | No       | The number of nodes to launch for this job (for multi-node distributed training)                                    | int  |
 | &#x2011;d, &#x2011;&#x2011;detach    | No       | Exit after the job is started instead of following the logs                                                         | flag |
-| &#x2011;r, &#x2011;&#x2011;run       | No       | Command to run when the job starts                                                                                  | str  |
+| &#x2011;r, &#x2011;&#x2011;run       | No       | Command to run when the job starts    
+| &#x2011;e, &#x2011;&#x2011;env       | No       | Specify an environment variable in the form `--env key=value` or `--env key` (value will come from the value of `$key` in your shell). You can use this flag multiple times to specify multiple environment variables. | str  |
 
-### Examples
+## Examples
 
 Run the hello world job described in the [quickstart](../../../../quickstart)
 

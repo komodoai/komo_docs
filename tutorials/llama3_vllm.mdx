@@ -4,7 +4,7 @@ title: Running Llama3 with vLLM
 
 This tutorial will guide you through serving Llama3 with vLLM on Komodo Cloud. Follow these steps to configure and deploy Llama3 effectively.
 
-### Step 1: Create the service config
+## Step 1: Create the service config
 
 Create a configuration file for the Llama3 service. Below is a sample `service-llama3.yaml` file.
 
@@ -37,7 +37,7 @@ run: |
   vllm serve meta-llama/Meta-Llama-3-8B-Instruct --tensor-parallel-size 1 --port 8000
 ```
 
-### Step 2: Launch the Llama3 Service
+## Step 2: Launch the Llama3 Service
 
 With your configuration file ready, launch the Llama3 service using the CLI:
 
@@ -45,7 +45,7 @@ With your configuration file ready, launch the Llama3 service using the CLI:
 komo service launch service-llama3.yaml --name llama3-8b
 ```
 
-### Step 3: Chat with Llama3
+## Step 3: Chat with Llama3
 
 Once the service status is `RUNNING`, you can chat with it right from the dashboard!
 The endpoint for the service is also provided in the dashboard.

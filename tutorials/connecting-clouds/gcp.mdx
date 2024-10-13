@@ -4,7 +4,7 @@ title: GCP
 
 This guide will walk you through the process of creating a service account in Google Cloud Platform (GCP), enabling the necessary services, and configuring permissions so you can use it with our service.
 
-### Prerequisites
+## Prerequisites
 
 - **Google Cloud Account:** Ensure you have a Google Cloud account. If you haven’t already, you can sign up for free at [Google Cloud Console](https://console.cloud.google.com).
 - **GCP Project:** Have a GCP project created where you can perform the actions described below. Create a project [here](https://console.cloud.google.com/projectcreate) if needed.
@@ -14,7 +14,7 @@ This guide will walk you through the process of creating a service account in Go
 If you need help with anything below, please let us know on [Discord](https://discord.gg/baJGK6RKZC)! 😊
 </Tip>
 
-### Create a Service Account
+## Create a Service Account
 
 1. Log in to the [Google Cloud Console](https://console.cloud.google.com/) and select your project form the drop-down menu at the top of the page.
 
@@ -32,7 +32,7 @@ On the "Grant this service account access to the project" section, click the "Se
 
 <img width="60%" src="../../images/gcp-setup/sa_permissions.png" />
 
-### Create a Key for the Service Account
+## Create a Key for the Service Account
 
 1. In `Service Accounts` you will see your newly-created Service Account. Click on it and navigate to the **KEYS** tab.
 
@@ -48,7 +48,7 @@ On the "Grant this service account access to the project" section, click the "Se
 
 This will download the generated key JSON file on your machine.
 
-### Upload the created Service Account key to Komodo
+## Upload the created Service Account key to Komodo
 
 1. In the Komodo console, navigate to the [Settings](https://app.komodo.io/settings) page
 
@@ -56,7 +56,7 @@ This will download the generated key JSON file on your machine.
 
 And that's it! You can now launch your workloads on GCP through Komodo! Follow [this tutorial](../../quickstart) to get started.
 
-### FAQ
+## FAQ
 
 <Accordion title="What is a Service Account?">
   A service account is a non-personal Google Cloud account used by applications
